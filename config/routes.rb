@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root 'pages#index'
-  get '/*path' => 'pages#index'
+  get 'pages/*path' => 'pages#index'
   resources :sessions, only: [:create]
   resources :registrations, only: [:create]
   delete    :logout, to: "sessions#logout"
