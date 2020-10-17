@@ -1,51 +1,52 @@
-import React, { Component } from 'react'
-import styled from 'styled-components'
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Card, Form, Button } from "react-bootstrap";
 
-class Task extends Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			
-		}
-	}
+const Task = () => {
+  const [show, setShow] = useState(false);
 
-	handleClick = () => {
+  const handleClose = () => {
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
 
-	}
+  return (
+    <Card style={{ width: "18rem" }}>
+      <Card.Header>One-time task 2/15/20</Card.Header>
+      <Card.Body>
+        <Card.Title className='mb-3'>Lawn mower broken</Card.Title>
+        <Card.Subtitle className='mb-2 text-muted mb-3'>
+          Status: unfulfilled
+        </Card.Subtitle>
+        <Card.Text className='mb-4'>
+          I need help repairing my lawn mower.
+        </Card.Text>
+        <div className='d-flex justify-content-around'>
+          <Button variant='secondary'>Cancel</Button>
+          <Button variant='primary' onClick={handleShow}>
+            Volunteer
+          </Button>
+        </div>
+      </Card.Body>
+      {show ? (
+        <Card.Footer className='text-muted'>
+          <Form>
+            <Form.Group>
+              <Form.Control as='textarea' rows='3' />
+              <div className='d-flex justify-content-around'>
+                <Button variant='secondary' onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button variant='primary'>Send</Button>
+              </div>
+            </Form.Group>
+          </Form>
+        </Card.Footer>
+      ) : null}
+    </Card>
+  );
+};
 
-	render() {
-		console.log(window.location)
-		return (
-		<div>
-			<div>
-			<p>Date: 2/15/20</p>
-			<p>Type: one-time tasks</p>
-			<p>Title: Lawn mower broken</p>
-			<p>Description: I need help repairing my lawn mower</p>
-			<p>Status: unfulfilled</p>
-			</div>
-			<div>
-			<div>
-			<button>Volunteer</button>
-			</div> 
-			<div>
-				<form action="">
-					<textarea name="" id="" cols="30" rows="10" value="Enter text here..."></textarea>
-							<div>
-						<button>Cancel</button>
-						<button>Submit</button>
-						</div>
-				</form>
-			</div>
-			</div>
-
-			<div>
-				<button>Repost</button>
-				<button>Fulfilled</button>
-			</div>
-		</div>
-		)
-	}
-}
-
-export default Task
+export default Task;

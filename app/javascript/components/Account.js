@@ -1,27 +1,31 @@
-import React, { components } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "./Avatar";
+import { Form, Button } from "react-bootstrap";
+import ImageUploader from "react-images-upload";
 import styled from "styled-components";
-import { Component } from "react";
 
-class Account extends Component {
-  constructor(props) {
-    super(props);
+const StyledAccount = styled.div`
+  max-width: 500px;
+  margin: 0 auto;
+`;
 
-    this.state = {
-      first_name: "",
-      last_name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
-    };
-  }
+const Account = () => {
+  const [userInput, setUserInput] = useState("");
+  const [pictures, setPictures] = useState("");
 
-  handleSubmit = async (event) => {
+  const handleUserInputChange = (event) => {
+    const newValue = event.target.value;
+    setUserInput(newValue);
+  };
+
+  const onDrop = (picture) => {
+    setPictures(pictures.concat(picture));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const { email, password, password_confirmation } = this.state;
-
       const response = await axios.post(
         "http://localhost:3000/signup",
         {
@@ -42,77 +46,75 @@ class Account extends Component {
     }
   };
 
-  handleChange = (e) => {
-    const [name, value] = e.target;
-    console.log(name, value);
-  };
-  render() {
-    console.log(window.location.pathname);
-    return (
-      <React.Fragment>
-        <div className='mx-auto w-25 my-3'>
-          <Avatar />
-          <div className='d-flex justify-content-center'>
-            <div className='btn btn-mdb-color btn-rounded float-left'>
-              <span>Add photo</span>
-              <input type='file' />
-            </div>
-          </div>
+  return (
+    <StyledAccount>
+      <Avatar />
+      <ImageUploader
+        withIcon={false}
+        buttonText='Edit Image'
+        onChange={onDrop}
+        imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+        maxFileSize={5242880}
+      />
+
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>First name</Form.Label>
+          <Form.Control
+            type='text'
+            name='last_name'
+            value={userInput}
+            onChange={handleUserInputChange}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Last name</Form.Label>
+          <Form.Control
+            type='text'
+            name='last_name'
+            value={userInput}
+            onChange={handleUserInputChange}
+          />
+        </Form.Group>
+        <Form.Label>Email</Form.Label>
+        <Form.Group controlId='formBasicEmail'>
+          <Form.Control
+            type='email'
+            name='email'
+            value={userInput}
+            onChange={handleUserInputChange}
+          />
+        </Form.Group>
+        <Form.Label>Password</Form.Label>
+        <Form.Group controlId='formBasicPassword'>
+          <Form.Control
+            type='password'
+            name='password'
+            value={userInput}
+            onChange={handleUserInputChange}
+          />
+        </Form.Group>
+        <Form.Label>Password Confirmation</Form.Label>
+        <Form.Group controlId='formBasicPassword'>
+          <Form.Control
+            type='password'
+            name='password_confirmation'
+            value={userInput}
+            onChange={handleUserInputChange}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.File />
+        </Form.Group>
+        <div className='d-flex justify-content-around'>
+          <Button variant='primary' type='submit'>
+            Update
+          </Button>
+          <Button variant='danger'>Delete Account</Button>
         </div>
-        <form className='form' onSubmit={this.handleSubmit}>
-          <div className='form-group'>
-            <label htmlFor='first_name'></label>
-            <input
-              onChange={(e) => this.handleChange(e)}
-              type='text'
-              name='first_name'
-              value={this.state.first_name}
-            />
-          </div>
-          <div className='form-group'>
-            <label htmlFor='last_name'></label>
-            <input
-              onChange={(e) => this.handleChange(e)}
-              type='text'
-              name='last_name'
-              value={this.state.last_name}
-            />
-          </div>
-          <div className='form-group'>
-            <label htmlFor='email'></label>
-            <input
-              onChange={(e) => this.handleChange(e)}
-              type='text'
-              name='email'
-              value={this.state.email}
-            />
-          </div>
-          <div className='form-group'>
-            <label htmlFor='password'></label>
-            <input
-              onChange={(e) => this.handleChange(e)}
-              type='text'
-              name='password'
-              value={this.state.password}
-            />
-          </div>
-          <div className='form-group'>
-            <label htmlFor='password_confirmation'></label>
-            <input
-              onChange={(e) => this.handleChange(e)}
-              type='text'
-              name='password_confirmation'
-              value={this.state.password_confirmation}
-            />
-          </div>
-          <div>
-            <button type='submit'>Update</button>
-            <button type='button'>Delete</button>
-          </div>
-        </form>
-      </React.Fragment>
-    );
-  }
-}
+      </Form>
+    </StyledAccount>
+  );
+};
 
 export default Account;

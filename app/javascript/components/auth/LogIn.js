@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -46,28 +47,31 @@ class LogIn extends Component {
   render() {
     return (
       <div>
-        <h1>LogIn Pages</h1>
-        <form className='form' onSubmit={this.handleSubmit}>
-          <div className='form-group'>
-            <input
-              onChange={this.handleChange}
-              type='text'
+        <h1 className='m-5'>LogIn Pages</h1>
+        <Form>
+          <Form.Label>Email</Form.Label>
+          <Form.Group controlId='formBasicEmail'>
+            <Form.Control
+              type='email'
               name='email'
               value={this.state.email}
-              placeholder='Email'
-            />
-          </div>
-          <div className='form-group'>
-            <input
               onChange={this.handleChange}
+            />
+          </Form.Group>
+          <Form.Label>Password</Form.Label>
+          <Form.Group controlId='formBasicPassword'>
+            <Form.Control
               type='password'
               name='password'
               value={this.state.password}
-              placeholder='Password'
+              onChange={this.handleChange}
             />
-          </div>
-          <button type='submit'>Submit</button>
-        </form>
+          </Form.Group>
+
+          <Button variant='primary' type='submit' className='w-100'>
+            Login
+          </Button>
+        </Form>
       </div>
     );
   }

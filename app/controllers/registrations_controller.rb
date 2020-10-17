@@ -15,6 +15,6 @@ class RegistrationsController < ApplicationController
 
 	private 
 	def registration_params
-		params.fetch(:user, {}).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+		params.fetch(:user, {}).permit(:first_name, :last_name, :email, :password, :password_confirmation, :photo)
 	end
 end

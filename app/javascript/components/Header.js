@@ -1,58 +1,89 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { FaHandHoldingHeart } from "react-icons/fa";
 import styled from "styled-components";
 import axios from "axios";
 
-class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+const StyledNavbar = styled(Navbar)`
+  background-color: transparent;
+  .btn-style {
+    border: none;
+    padding: 0.5rem 1rem;
   }
+  .btn-logout {
+    width: 100%;
+  }
+  .brand {
+    margin: 10px;
+  }
+`;
 
-  handleLogoutClick = async () => {
+const Header = ({ handleLogout, handleShow }) => {
+  const handleLogoutClick = async () => {
     try {
       const { data } = await axios.delete("http://localhost:3000/logout", {
         withCredentials: true,
       });
 
       if (data.logged_out) {
-        this.props.handleLogout();
+        handleLogout();
       }
     } catch (error) {
       console.log("logout error", error);
     }
   };
 
-  render() {
-    return (
-      <header>
-        <nav>
+  return (
+    <StyledNavbar expand='lg'>
+      <Link className='navbar-brand' to='/'>
+        <FaHandHoldingHeart className='brand' />
+        Neighborhood Aid
+      </Link>
+      <Navbar.Toggle aria-controls='basic-navbar-nav' />
+      <Navbar.Collapse id='basic-navbar-nav'>
+        <Nav className='ml-auto'>
           <Link className='nav-link active' to='/'>
             Home
           </Link>
-          <Link className='nav-link' to='pages/login'>
+          <button className='btn-style' onClick={handleShow}>
             Sign In
-          </Link>
-          <Link className='nav-link' to='pages/register'>
+          </button>
+          <button className='btn-style' onClick={handleShow}>
             Register
-          </Link>
-          <Link className='nav-link' to='pages/requests'>
+          </button>
+          <Link className='nav-link' to='/pages/requests'>
             Requests
           </Link>
-          <Link className='nav-link' to='pages/create-request'>
-            Create Request
+          <Link className='nav-link' to='/pages/add-request'>
+            Add Request
           </Link>
-          <Link className='nav-link' to='pages/my-request'>
+          <Link className='nav-link' to='/pages/my-request'>
             My Request
           </Link>
-          <Link className='nav-link' to='pages/chat'>
+          <Link className='nav-link' to='/pages/chat'>
             Chat
           </Link>
-          <button onClick={() => this.handleLogoutClick()}>Logout</button>
-        </nav>
-      </header>
-    );
-  }
-}
+          <NavDropdown
+            title='Hi Tim!'
+            id='basic-nav-dropdown'
+            className='dropleft'
+          >
+            <Link className='nav-link text-center' to='/pages/account'>
+              Account
+            </Link>
+            <NavDropdown.Divider />
+            <button
+              className='btn-style btn-logout'
+              onClick={() => handleLogoutClick()}
+            >
+              Logout
+            </button>
+          </NavDropdown>
+        </Nav>
+      </Navbar.Collapse>
+    </StyledNavbar>
+  );
+};
 
 export default Header;

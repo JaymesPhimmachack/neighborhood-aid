@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -65,69 +66,63 @@ class SignUp extends Component {
   render() {
     return (
       <React.Fragment>
-        <h1>Registration Pages</h1>
-        <form className='form' onSubmit={this.handleSubmit}>
-          <div className='form-group'>
-            <label htmlFor='first_name'>First Name</label>
-            <input
-              onChange={this.handleChange}
+        <h1 className='m-5'>Registration Pages</h1>
+        <Form>
+          <Form.Group>
+            <Form.Label>First name</Form.Label>
+            <Form.Control
               type='text'
-              name='first_name'
+              name='last_name'
               value={this.state.first_name}
-            />
-          </div>
-          <div className='form-group'>
-            <label htmlFor='last_name'>Last Name</label>
-            <input
               onChange={this.handleChange}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Last name</Form.Label>
+            <Form.Control
               type='text'
               name='last_name'
               value={this.state.last_name}
-            />
-          </div>
-          <div className='form-group'>
-            <label htmlFor='email'>Email</label>
-            <input
               onChange={this.handleChange}
+            />
+          </Form.Group>
+          <Form.Label>Email</Form.Label>
+          <Form.Group controlId='formBasicEmail'>
+            <Form.Control
               type='email'
               name='email'
               value={this.state.email}
-            />
-          </div>
-          <div className='form-group'>
-            <label htmlFor='password'>Password</label>
-            <input
               onChange={this.handleChange}
+            />
+          </Form.Group>
+          <Form.Label>Password</Form.Label>
+          <Form.Group controlId='formBasicPassword'>
+            <Form.Control
               type='password'
               name='password'
               value={this.state.password}
-            />
-          </div>
-          <div className='form-group'>
-            <label htmlFor='password_confirmation'>Password Confirmation</label>
-            <input
               onChange={this.handleChange}
+            />
+          </Form.Group>
+          <Form.Label>Password Confirmation</Form.Label>
+          <Form.Group controlId='formBasicPassword'>
+            <Form.Control
               type='password'
               name='password_confirmation'
               value={this.state.password_confirmation}
-            />
-          </div>
-          <div className='custom-file'>
-            <input
-              type='file'
-              name='file'
-              value={this.state.file}
               onChange={this.handleChange}
             />
-            <label className='custom-file-label' htmlFor='file'>
-              Copy of a government-approved ID (approved formats: .jpg, .png,
-              .pdf)
-            </label>
-          </div>
-          <div>
-            <button type='submit'>Submit</button>
-          </div>
-        </form>
+          </Form.Group>
+          <Form.Group>
+            <Form.File
+              id='exampleFormControlFile1'
+              label='Example file input'
+            />
+          </Form.Group>
+          <Button variant='primary' type='submit' className='w-100'>
+            Signup
+          </Button>
+        </Form>
       </React.Fragment>
     );
   }
