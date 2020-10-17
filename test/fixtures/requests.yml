@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  owner_id: 1
+  title: MyString
+  type: 
+  description: MyString
+  latitude: 1.5
+  longitude: 1.5
+  request_fulfilled: false
+
+two:
+  owner_id: 1
+  title: MyString
+  type: 
+  description: MyString
+  latitude: 1.5
+  longitude: 1.5
+  request_fulfilled: false
