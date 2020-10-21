@@ -1,5 +1,5 @@
 import React from "react";
-import ProfileImage from "../../assets/images/model-2911331_640.jpg";
+import ProfileImage from "../../../../assets/images/model-2911331_640.jpg";
 import styled from "styled-components";
 
 const StyledImage = styled.div`

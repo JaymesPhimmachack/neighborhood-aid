@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Header from "../components/Header";
-import Home from "../components/Home";
-import Login from "../components/auth/Login";
-import Registration from "../components/auth/Registration";
-import Requests from "../components/Requests";
-import AddRequest from "../components/AddRequest";
-import MyRequest from "../components/MyRequest";
-import Chat from "../components/Chat";
-import Account from "../components/Account";
+import Header from "./components/Header";
+import Home from "./components/Home";
+import Login from "./components/auth/Login";
+import Registration from "./components/auth/Registration";
+import Requests from "./components/Requests";
+import AddRequest from "./components/AddRequest";
+import MyRequest from "./components/MyRequest";
+import Chat from "./components/Chat";
+import Account from "./components/Account";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 

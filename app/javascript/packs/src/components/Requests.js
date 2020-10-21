@@ -11,9 +11,9 @@ import Task from "./Task";
 import AddRequest from "./AddRequest";
 import styled from "styled-components";
 import { Modal, Button } from "react-bootstrap";
-import oneTimeTaskUrl from "../../assets/images/one_time_task.svg";
-import materialNeedUrl from "../../assets/images/material_need.svg";
-import { getUserLocation } from "../components/actions";
+import oneTimeTaskUrl from "../../../../assets/images/one_time_task.svg";
+import materialNeedUrl from "../../../../assets/images/material_need.svg";
+import { getUserLocation } from "./actions/index";
 import Axios from "axios";
 
 var corner1 = L.latLng(40.712, -74.227),

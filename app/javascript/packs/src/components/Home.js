@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Login from "./auth/Login";
-import Registration from "../components/auth/Registration";
+import Registration from "./auth/Registration";
 import { Modal, Container, Button } from "react-bootstrap";
-import mainImage from "../../assets/images/humanitarian-aid-939723.jpg";
+import mainImage from "../../../../assets/images/humanitarian-aid-939723.jpg";
 import styled from "styled-components";
 
 const StyledHome = styled.div`
