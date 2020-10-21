@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "../components/Header";
 import Home from "../components/Home";
-import LogIn from "../components/auth/LogIn";
+import Login from "../components/auth/Login";
 import Registration from "../components/auth/Registration";
 import Requests from "../components/Requests";
 import AddRequest from "../components/AddRequest";
@@ -16,7 +16,15 @@ const App = () => {
   const [loggedInStatus, setLoggedInStatus] = useState("NOT_LOGGED_IN");
   const [user, setUser] = useState({});
   const [show, setShow] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showBtnClick, setBtnClick] = useState("signin");
+
+  const handleClose = () => {
+    setShow(false);
+  };
+  const handleShow = (event) => {
+    setBtnClick(event.target.name);
+    setShow(true);
+  };
 
   const handleLogin = (data) => {
     setLoggedInStatus("LOGGED_IN");
@@ -66,7 +74,7 @@ const App = () => {
                 show={show}
                 handleClose={handleClose}
                 handleShow={handleShow}
-                showLogin={showLogin}
+                showBtnClick={showBtnClick}
               />
             )}
           />

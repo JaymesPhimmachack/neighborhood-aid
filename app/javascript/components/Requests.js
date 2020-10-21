@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Map, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
+import PlacesAutocomplete from "react-places-autocomplete";
+import {
+  geocodeByAddress,
+  geocodeByPlaceId,
+  getLatLng,
+} from "react-places-autocomplete";
 import Task from "./Task";
 import AddRequest from "./AddRequest";
 import styled from "styled-components";
@@ -9,6 +15,10 @@ import oneTimeTaskUrl from "../../assets/images/one_time_task.svg";
 import materialNeedUrl from "../../assets/images/material_need.svg";
 import { getUserLocation } from "../components/actions";
 import Axios from "axios";
+
+var corner1 = L.latLng(40.712, -74.227),
+  corner2 = L.latLng(40.774, -74.125),
+  bounds = L.latLngBounds(corner1, corner2);
 
 const oneTimeTaskIcon = L.icon({
   iconUrl: oneTimeTaskUrl,
@@ -22,6 +32,8 @@ const materialNeedIcon = L.icon({
 
 const Requests = () => {
   const [show, setShow] = useState(false);
+  const [bounds, setBounds] = useState("");
+  const [latlng, setLatLng] = useState([40.774, -74.125]);
   const [viewport, setViewport] = useState({
     haveUsersLocation: false,
     latitude: 45.4211,
@@ -33,6 +45,8 @@ const Requests = () => {
     markerLng: "",
     gotPosition: false,
   });
+
+  const mapRef = useRef(null);
 
   const handleClose = () => {
     setShow(false);
@@ -68,7 +82,8 @@ const Requests = () => {
     }
   };
 
-  const addRequest = () => {
+  const addRequest = (event) => {
+    console.log(event);
     // return (
     //   <Marker
     //     position={[this.state.markerLat, this.state.markerLng]}
@@ -85,6 +100,13 @@ const Requests = () => {
 
   const handleMarkerClick = () => {};
 
+  const handleClick = () => {
+    const map = this.mapRef.current;
+    if (map != null) {
+      map.leafletElement.locate();
+    }
+  };
+
   useEffect(() => {
     // getUserLocation().then((location) => {
     //   setViewport({
@@ -94,30 +116,38 @@ const Requests = () => {
     //   });
     // });
     // this.geocode();
+    const SW = mapRef.current.leafletElement.getBounds()._southWest;
+    const NE = mapRef.current.leafletElement.getBounds()._northEast;
+    // const southWest = L.latLng(SW);
+    // const northEast = L.latLng(NE);
+    const mapBounds = L.latLngBounds(SW, NE);
+    setBounds(mapBounds);
   }, []);
 
   return (
     <div className='container py-5'>
       <Map
-        center={[45.4211, -75.6903]}
-        zoom={13}
+        ref={mapRef}
+        center={[40.774, -74.125]}
+        zoom={10}
         style={{ height: "700px", width: "100%" }}
         onMouseUp={getMarkerLocation}
         onContextMenu={handleContextMenu}
-        onClick={handleShow}
+        onClick={handleClick}
+        maxBounds={bounds}
       >
         <TileLayer
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        <Marker position={[45.4211, -75.6903]} icon={oneTimeTaskIcon}>
+        <Marker position={[40.774, -74.125]} icon={oneTimeTaskIcon}>
           <Popup>
             <Task />
           </Popup>
         </Marker>
         {viewport.gotPosition ? addRequest() : null}
       </Map>
-      <Modal
+      {/* <Modal
         show={show}
         onHide={handleClose}
         backdrop='static'
@@ -131,7 +161,7 @@ const Requests = () => {
             Close
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
       <div className='mt-3'>Open Requests: 8</div>
     </div>
   );

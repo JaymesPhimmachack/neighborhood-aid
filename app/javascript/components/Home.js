@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Login from "./auth/Login";
+import Registration from "../components/auth/Registration";
 import { Modal, Container, Button } from "react-bootstrap";
 import mainImage from "../../assets/images/humanitarian-aid-939723.jpg";
 import styled from "styled-components";
@@ -10,18 +12,33 @@ const StyledHome = styled.div`
   height: 100vh;
   width: 100vw;
   padding: 10px;
+  .wrapper {
+    width: 700px;
+    margin: 70px auto;
+  }
+  h1 {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 64px;
+  }
+  .btn-style {
+    width: 150px;
+    height: 50px;
+  }
+  .cta {
+    margin-top: 170px;
+  }
 `;
 
-const Home = ({ history, handleLogin, loggedInStatus, handleShow }) => {
-  const handleClose = () => {
-    setShow(false);
-    setShowLogin(false);
-  };
-  const handleShow = () => {
-    setShow(true);
-    setShowLogin(true);
-  };
-
+const Home = ({
+  history,
+  handleLogin,
+  loggedInStatus,
+  handleClose,
+  handleShow,
+  show,
+  showBtnClick,
+}) => {
   const handleSuccessfulAuth = (data) => {
     handleLogin(data);
     history.push("/requests");
@@ -36,13 +53,18 @@ const Home = ({ history, handleLogin, loggedInStatus, handleShow }) => {
       <Container>
         <div className='wrapper'>
           <h1>Neighborhood Aid</h1>
-          <h2>{loggedInStatus}</h2>
           <h3>Lend a helping hand or ask for help.</h3>
-          <div>
+          <div className='cta'>
             <p>Ready to make a difference or look for help?</p>
-            <Button variant='secondary' onClick={handleShow}>
+            <Button
+              variant='secondary'
+              name='register'
+              className='btn-style'
+              onClick={handleShow}
+            >
               Sign Up
             </Button>
+            <h4>{loggedInStatus}</h4>
           </div>
         </div>
         <Modal
@@ -52,13 +74,13 @@ const Home = ({ history, handleLogin, loggedInStatus, handleShow }) => {
           keyboard={false}
         >
           <Modal.Body>
-            {showLogin ? (
-              <Login handleSuccessfulAuth={handleLogin} />
+            {showBtnClick === "signin" ? (
+              <Login handleSuccessfulAuth={handleSuccessfulAuth} />
             ) : (
-              <Registration handleSuccessfulAuth={handleLogin} />
+              <Registration handleSuccessfulAuth={handleSuccessfulAuth} />
             )}
           </Modal.Body>
-          <Modal.Footer>
+          <Modal.Footer className='mt-3'>
             <Button variant='secondary' onClick={handleClose}>
               Close
             </Button>

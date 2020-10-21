@@ -3,7 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
 
-class LogIn extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
 
@@ -47,7 +47,7 @@ class LogIn extends Component {
   render() {
     return (
       <div>
-        <h1 className='m-5'>LogIn Pages</h1>
+        <h1 className='mb-5 mt-3 text-center'>LogIn</h1>
         <Form>
           <Form.Label>Email</Form.Label>
           <Form.Group controlId='formBasicEmail'>
@@ -77,4 +77,4 @@ class LogIn extends Component {
   }
 }
 
-export default LogIn;
+export default Login;

@@ -66,7 +66,7 @@ class SignUp extends Component {
   render() {
     return (
       <React.Fragment>
-        <h1 className='m-5'>Registration Pages</h1>
+        <h1 className='m-5'>Register</h1>
         <Form>
           <Form.Group>
             <Form.Label>First name</Form.Label>

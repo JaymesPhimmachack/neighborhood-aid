@@ -4,12 +4,17 @@ import { Card, Form, Button } from "react-bootstrap";
 
 const Task = () => {
   const [show, setShow] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleClose = () => {
     setShow(false);
   };
   const handleShow = () => {
     setShow(true);
+  };
+
+  const handleChange = (event) => {
+    setMessage(event.target.value);
   };
 
   return (
@@ -35,10 +40,17 @@ const Task = () => {
           <Form>
             <Form.Group>
               <Form.Control as='textarea' rows='3' />
-              <div className='d-flex justify-content-around'>
+              <div
+                className='d-flex justify-content-around'
+                onChange={handleChange}
+                value={message}
+                name='message'
+              >
+                <div>{message.length} characters</div>
                 <Button variant='secondary' onClick={handleClose}>
                   Cancel
                 </Button>
+
                 <Button variant='primary'>Send</Button>
               </div>
             </Form.Group>

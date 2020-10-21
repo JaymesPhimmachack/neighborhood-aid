@@ -46,10 +46,10 @@ const Header = ({ handleLogout, handleShow }) => {
           <Link className='nav-link active' to='/'>
             Home
           </Link>
-          <button className='btn-style' onClick={handleShow}>
+          <button className='btn-style' name='signin' onClick={handleShow}>
             Sign In
           </button>
-          <button className='btn-style' onClick={handleShow}>
+          <button className='btn-style' name='register' onClick={handleShow}>
             Register
           </button>
           <Link className='nav-link' to='/pages/requests'>
