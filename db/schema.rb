@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_15_183719) do
+ActiveRecord::Schema.define(version: 2020_10_20_153450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,25 +36,30 @@ ActiveRecord::Schema.define(version: 2020_10_15_183719) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "chats", force: :cascade do |t|
-    t.integer "sender_id"
-    t.integer "receiver_id"
-    t.string "task_fulfilled"
+  create_table "fulfillments", force: :cascade do |t|
+    t.integer "request_id"
+    t.integer "volunteer_id"
+    t.boolean "task_fulfilled", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["request_id"], name: "index_fulfillments_on_request_id"
+    t.index ["volunteer_id"], name: "index_fulfillments_on_volunteer_id"
   end
 
   create_table "messages", force: :cascade do |t|
-    t.string "body"
     t.integer "creator_id"
+    t.integer "fulfillment_id"
+    t.string "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_messages_on_creator_id"
+    t.index ["fulfillment_id"], name: "index_messages_on_fulfillment_id"
   end
 
   create_table "requests", force: :cascade do |t|
     t.integer "owner_id"
     t.string "title"
-    t.string "type"
+    t.string "request_type"
     t.string "description"
     t.string "address"
     t.float "latitude"
@@ -63,6 +68,7 @@ ActiveRecord::Schema.define(version: 2020_10_15_183719) do
     t.integer "helper_fufilled"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_requests_on_owner_id"
   end
 
   create_table "users", force: :cascade do |t|

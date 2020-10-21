@@ -3,7 +3,7 @@ class CreateRequests < ActiveRecord::Migration[5.2]
     create_table :requests do |t|
       t.integer :owner_id
       t.string :title
-      t.string :type
+      t.string :request_type
       t.string :description
       t.string :address
       t.float :latitude
@@ -13,5 +13,6 @@ class CreateRequests < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
+    add_index :requests, :owner_id
   end
 end
