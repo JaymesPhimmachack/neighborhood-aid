@@ -5,7 +5,7 @@ import Home from "./components/Home";
 import Login from "./components/auth/Login";
 import Registration from "./components/auth/Registration";
 import Requests from "./components/Requests";
-import AddRequest from "./components/AddRequest";
+import AddRequestForm from "./components/AddRequestForm";
 import MyRequest from "./components/MyRequest";
 import Chat from "./components/Chat";
 import Account from "./components/Account";
@@ -28,7 +28,7 @@ const App = () => {
 
   const handleLogin = (data) => {
     setLoggedInStatus("LOGGED_IN");
-    setUser(data);
+    setUser(data.user);
   };
 
   const handleLogout = () => {
@@ -61,7 +61,11 @@ const App = () => {
   return (
     <div>
       <Router>
-        <Header handleLogout={handleLogout} handleShow={handleShow} />
+        <Header
+          handleLogout={handleLogout}
+          handleShow={handleShow}
+          name={user.first_name}
+        />
         <Switch>
           <Route
             exact
@@ -78,12 +82,13 @@ const App = () => {
               />
             )}
           />
-
           <Route path='/pages/requests' component={Requests} />
-          <Route path='/pages/add-request' component={AddRequest} />
           <Route path='/pages/my-request' component={MyRequest} />
           <Route path='/pages/chat' component={Chat} />
-          <Route path='/pages/account' component={Account} />
+          <Route
+            path='/pages/account'
+            render={(props) => <Account {...props} user={user} />}
+          />
         </Switch>
       </Router>
     </div>

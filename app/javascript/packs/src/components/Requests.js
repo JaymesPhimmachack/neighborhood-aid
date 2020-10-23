@@ -1,20 +1,14 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Map, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
-import PlacesAutocomplete from "react-places-autocomplete";
-import {
-  geocodeByAddress,
-  geocodeByPlaceId,
-  getLatLng,
-} from "react-places-autocomplete";
 import Task from "./Task";
-import AddRequest from "./AddRequest";
+import AddRequestForm from "./AddRequestForm";
 import styled from "styled-components";
 import { Modal, Button } from "react-bootstrap";
 import oneTimeTaskUrl from "../../../../assets/images/one_time_task.svg";
 import materialNeedUrl from "../../../../assets/images/material_need.svg";
 import { getUserLocation } from "./actions/index";
-import Axios from "axios";
+import axios from "axios";
 
 var corner1 = L.latLng(40.712, -74.227),
   corner2 = L.latLng(40.774, -74.125),
@@ -45,6 +39,7 @@ const Requests = () => {
     markerLng: "",
     gotPosition: false,
   });
+  const [request, setRequest] = useState([]);
 
   const mapRef = useRef(null);
 
@@ -58,7 +53,7 @@ const Requests = () => {
   const geocode = async () => {
     try {
       const location = "405 terminal avenue ottawa canada";
-      const response = await Axios.get(
+      const response = await axios.get(
         "https://maps.googleapis.com/maps/api/geocode/json",
         {
           params: {
@@ -77,7 +72,7 @@ const Requests = () => {
   const getMarkerLocation = (event) => {
     if (event.originalEvent.button === 2) {
       const { lat, lng } = event.latlng;
-
+      console.log(lat, lng);
       setViewport({ markerLat: lat, markerLng: lng, gotPosition: true });
     }
   };
@@ -86,7 +81,7 @@ const Requests = () => {
     console.log(event);
     // return (
     //   <Marker
-    //     position={[this.state.markerLat, this.state.markerLng]}
+    //     position={[state.markerLat, state.markerLng]}
     //     icon={oneTimeTaskIcon}
     //   >
     //     <Popup>pop up here</Popup>
@@ -101,9 +96,20 @@ const Requests = () => {
   const handleMarkerClick = () => {};
 
   const handleClick = () => {
-    const map = this.mapRef.current;
+    const map = mapRef.current;
     if (map != null) {
       map.leafletElement.locate();
+    }
+    handleShow();
+  };
+
+  const getRequest = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/requests");
+
+      console.log(response);
+    } catch (error) {
+      console.log("Request Error", error);
     }
   };
 
@@ -115,12 +121,14 @@ const Requests = () => {
     //     zoom: 13,
     //   });
     // });
-    // this.geocode();
-    const SW = mapRef.current.leafletElement.getBounds()._southWest;
-    const NE = mapRef.current.leafletElement.getBounds()._northEast;
-    // const southWest = L.latLng(SW);
-    // const northEast = L.latLng(NE);
-    const mapBounds = L.latLngBounds(SW, NE);
+    // geocode();
+    // {viewport.gotPosition ? addRequest() : null}
+
+    getRequest();
+    const southWest = mapRef.current.leafletElement.getBounds()._southWest;
+    const northEast = mapRef.current.leafletElement.getBounds()._northEast;
+
+    const mapBounds = L.latLngBounds(southWest, northEast);
     setBounds(mapBounds);
   }, []);
 
@@ -145,24 +153,30 @@ const Requests = () => {
             <Task />
           </Popup>
         </Marker>
-        {viewport.gotPosition ? addRequest() : null}
       </Map>
-      {/* <Modal
+      <Modal
         show={show}
         onHide={handleClose}
         backdrop='static'
         keyboard={false}
       >
         <Modal.Body>
-          <AddRequest />
+          <AddRequestForm />
         </Modal.Body>
         <Modal.Footer>
           <Button variant='secondary' onClick={handleClose}>
             Close
           </Button>
         </Modal.Footer>
-      </Modal> */}
-      <div className='mt-3'>Open Requests: 8</div>
+      </Modal>
+      <div>
+        <div className='mt-3'>Open Requests: 8</div>
+        <div>
+          <Button variant='secondary' onClick={handleShow}>
+            Add Request
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

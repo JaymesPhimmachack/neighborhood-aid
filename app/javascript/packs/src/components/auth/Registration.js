@@ -1,23 +1,28 @@
-import React, { Component } from "react";
+import React, { useReducer, useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import ImageUploader from "react-images-upload";
 import axios from "axios";
 import styled from "styled-components";
 
-class SignUp extends Component {
-  constructor(props) {
-    super(props);
+const StyledSignup = styled.div`
+  z-index: 10;
+`;
 
-    this.state = {
+const SignUp = ({ handleSuccessfulAuth }) => {
+  const [userInput, setUserInput] = useReducer(
+    (state, newState) => ({ ...state, ...newState }),
+    {
       first_name: "",
       last_name: "",
       email: "",
       password: "",
       password_confirmation: "",
-      registrationErrors: "",
-    };
-  }
+    }
+  );
 
-  handleSubmit = async (event) => {
+  const [photo, setPhoto] = useState("");
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
@@ -27,7 +32,7 @@ class SignUp extends Component {
         email,
         password,
         password_confirmation,
-      } = this.state;
+      } = userInput;
 
       const response = await axios.post(
         "http://localhost:3000/registrations",
@@ -42,90 +47,97 @@ class SignUp extends Component {
         },
         { withCredentials: true }
       );
-      this.setState({
+      setUserInput({
         first_name: "",
         last_name: "",
         email: "",
         password: "",
         password_confirmation: "",
       });
+
       console.log(response);
       if (response.data.status === "created") {
-        this.props.handleSuccessfulAuth(response.data);
+        handleSuccessfulAuth(response.data);
       }
     } catch (error) {
       console.log("registration error", error);
     }
   };
 
-  handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
+  const handleChange = (evt) => {
+    const name = evt.target.name;
+    const newValue = evt.target.value;
+    setUserInput({ [name]: newValue });
   };
 
-  render() {
-    return (
-      <React.Fragment>
-        <h1 className='m-5'>Register</h1>
-        <Form>
-          <Form.Group>
-            <Form.Label>First name</Form.Label>
-            <Form.Control
-              type='text'
-              name='last_name'
-              value={this.state.first_name}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Last name</Form.Label>
-            <Form.Control
-              type='text'
-              name='last_name'
-              value={this.state.last_name}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
-          <Form.Label>Email</Form.Label>
-          <Form.Group controlId='formBasicEmail'>
-            <Form.Control
-              type='email'
-              name='email'
-              value={this.state.email}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
-          <Form.Label>Password</Form.Label>
-          <Form.Group controlId='formBasicPassword'>
-            <Form.Control
-              type='password'
-              name='password'
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
-          <Form.Label>Password Confirmation</Form.Label>
-          <Form.Group controlId='formBasicPassword'>
-            <Form.Control
-              type='password'
-              name='password_confirmation'
-              value={this.state.password_confirmation}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.File
-              id='exampleFormControlFile1'
-              label='Example file input'
-            />
-          </Form.Group>
-          <Button variant='primary' type='submit' className='w-100'>
-            Signup
-          </Button>
-        </Form>
-      </React.Fragment>
-    );
-  }
-}
+  const onDrop = (picture) => {
+    setPhoto(picture);
+  };
+
+  return (
+    <React.Fragment>
+      <h1 className='m-5'>Register</h1>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>First name</Form.Label>
+          <Form.Control
+            type='text'
+            name='first_name'
+            value={userInput.first_name}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Last name</Form.Label>
+          <Form.Control
+            type='text'
+            name='last_name'
+            value={userInput.last_name}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Label>Email</Form.Label>
+        <Form.Group>
+          <Form.Control
+            type='email'
+            name='email'
+            value={userInput.email}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Label>Password</Form.Label>
+        <Form.Group>
+          <Form.Control
+            type='password'
+            name='password'
+            value={userInput.password}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Label>Password Confirmation</Form.Label>
+        <Form.Group>
+          <Form.Control
+            type='password'
+            name='password_confirmation'
+            value={userInput.password_confirmation}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Group>
+          <ImageUploader
+            withIcon={false}
+            buttonText='Choose images'
+            onChange={onDrop}
+            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+            maxFileSize={5242880}
+          />
+        </Form.Group>
+        <Button variant='primary' type='submit' className='w-100'>
+          Signup
+        </Button>
+      </Form>
+    </React.Fragment>
+  );
+};
 
 export default SignUp;

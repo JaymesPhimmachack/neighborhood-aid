@@ -3,5 +3,5 @@ class Message < ApplicationRecord
 	belongs_to :fulfillment
 
 	validates :body, presence: { message: "Message can't be blank" }
-  validates :body, length: { minimum: 4, maximum: 300, message: "Message between 4-300 characters" }
+  validates :body, length: { minimum: 2, maximum: 300, message: "Message between 4-300 characters" }
 end

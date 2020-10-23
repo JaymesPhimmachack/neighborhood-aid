@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
-import { FaHandHoldingHeart } from "react-icons/fa";
+import { FaHandsHelping } from "react-icons/fa";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -19,7 +19,8 @@ const StyledNavbar = styled(Navbar)`
   }
 `;
 
-const Header = ({ handleLogout, handleShow }) => {
+const Header = ({ handleLogout, handleShow, name }) => {
+  let history = useHistory();
   const handleLogoutClick = async () => {
     try {
       const { data } = await axios.delete("http://localhost:3000/logout", {
@@ -28,6 +29,7 @@ const Header = ({ handleLogout, handleShow }) => {
 
       if (data.logged_out) {
         handleLogout();
+        history.push("/");
       }
     } catch (error) {
       console.log("logout error", error);
@@ -37,7 +39,7 @@ const Header = ({ handleLogout, handleShow }) => {
   return (
     <StyledNavbar expand='lg'>
       <Link className='navbar-brand' to='/'>
-        <FaHandHoldingHeart className='brand' />
+        <FaHandsHelping className='brand' />
         Neighborhood Aid
       </Link>
       <Navbar.Toggle aria-controls='basic-navbar-nav' />
@@ -55,9 +57,6 @@ const Header = ({ handleLogout, handleShow }) => {
           <Link className='nav-link' to='/pages/requests'>
             Requests
           </Link>
-          <Link className='nav-link' to='/pages/add-request'>
-            Add Request
-          </Link>
           <Link className='nav-link' to='/pages/my-request'>
             My Request
           </Link>
@@ -65,7 +64,7 @@ const Header = ({ handleLogout, handleShow }) => {
             Chat
           </Link>
           <NavDropdown
-            title='Hi Tim!'
+            title={`Hi ${name}!`}
             id='basic-nav-dropdown'
             className='dropleft'
           >

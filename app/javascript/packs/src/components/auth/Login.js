@@ -1,23 +1,32 @@
-import React, { Component } from "react";
+import React, { useReducer } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
 
-class Login extends Component {
-  constructor(props) {
-    super(props);
+const StyledLogin = styled.div`
+  z-index: 10;
+`;
 
-    this.state = {
+const Login = ({ handleSuccessfulAuth }) => {
+  const [userInput, setUserInput] = useReducer(
+    (state, newState) => ({ ...state, ...newState }),
+    {
       email: "",
       password: "",
-    };
-  }
+    }
+  );
 
-  handleSubmit = async (event) => {
+  const handleChange = (evt) => {
+    const name = evt.target.name;
+    const newValue = evt.target.value;
+    setUserInput({ [name]: newValue });
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const { email, password } = this.state;
+      const { email, password } = userInput;
 
       const response = await axios.post(
         "http://localhost:3000/sessions",
@@ -30,51 +39,48 @@ class Login extends Component {
         { withCredentials: true }
       );
 
-      this.setState({ email: "", password: "" });
+      setUserInput({
+        email: "",
+        password: "",
+      });
 
       if (response.data.logged_in) {
-        this.props.handleSuccessfulAuth(response.data);
+        handleSuccessfulAuth(response.data);
       }
     } catch (error) {
       console.log("login error", error);
     }
   };
 
-  handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  };
-  render() {
-    return (
-      <div>
-        <h1 className='mb-5 mt-3 text-center'>LogIn</h1>
-        <Form>
-          <Form.Label>Email</Form.Label>
-          <Form.Group controlId='formBasicEmail'>
-            <Form.Control
-              type='email'
-              name='email'
-              value={this.state.email}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
-          <Form.Label>Password</Form.Label>
-          <Form.Group controlId='formBasicPassword'>
-            <Form.Control
-              type='password'
-              name='password'
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
+  return (
+    <StyledLogin>
+      <h1 className='mb-5 mt-3 text-center'>LogIn</h1>
+      <Form onSubmit={handleSubmit}>
+        <Form.Label>Email</Form.Label>
+        <Form.Group>
+          <Form.Control
+            type='email'
+            name='email'
+            value={userInput.email}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Form.Label>Password</Form.Label>
+        <Form.Group>
+          <Form.Control
+            type='password'
+            name='password'
+            value={userInput.password}
+            onChange={handleChange}
+          />
+        </Form.Group>
 
-          <Button variant='primary' type='submit' className='w-100'>
-            Login
-          </Button>
-        </Form>
-      </div>
-    );
-  }
-}
+        <Button variant='primary' type='submit' className='w-100'>
+          Login
+        </Button>
+      </Form>
+    </StyledLogin>
+  );
+};
 
 export default Login;

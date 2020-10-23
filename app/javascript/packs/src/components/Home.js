@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Login from "./auth/Login";
 import Registration from "./auth/Registration";
 import { Modal, Container, Button } from "react-bootstrap";
-import mainImage from "../../../../assets/images/humanitarian-aid-939723.jpg";
+import mainImage from "../../../../assets/images/team-4529717_1920.jpg";
 import styled from "styled-components";
 
 const StyledHome = styled.div`
@@ -41,12 +41,8 @@ const Home = ({
 }) => {
   const handleSuccessfulAuth = (data) => {
     handleLogin(data);
-    history.push("/requests");
+    history.push("/pages/requests");
   };
-
-  useEffect(() => {
-    console.log(history);
-  }, []);
 
   return (
     <StyledHome>
@@ -67,26 +63,26 @@ const Home = ({
             <h4>{loggedInStatus}</h4>
           </div>
         </div>
-        <Modal
-          show={show}
-          onHide={handleClose}
-          backdrop='static'
-          keyboard={false}
-        >
-          <Modal.Body>
-            {showBtnClick === "signin" ? (
-              <Login handleSuccessfulAuth={handleSuccessfulAuth} />
-            ) : (
-              <Registration handleSuccessfulAuth={handleSuccessfulAuth} />
-            )}
-          </Modal.Body>
-          <Modal.Footer className='mt-3'>
-            <Button variant='secondary' onClick={handleClose}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
       </Container>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop='static'
+        keyboard={false}
+      >
+        <Modal.Body>
+          {showBtnClick === "signin" ? (
+            <Login handleSuccessfulAuth={handleSuccessfulAuth} />
+          ) : (
+            <Registration handleSuccessfulAuth={handleSuccessfulAuth} />
+          )}
+        </Modal.Body>
+        <Modal.Footer className='mt-3'>
+          <Button variant='secondary' onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </StyledHome>
   );
 };
