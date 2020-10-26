@@ -48,12 +48,12 @@ ActiveRecord::Schema.define(version: 2020_10_20_153450) do
 
   create_table "messages", force: :cascade do |t|
     t.integer "creator_id"
-    t.integer "fulfillment_id"
+    t.integer "request_id"
     t.string "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_messages_on_creator_id"
-    t.index ["fulfillment_id"], name: "index_messages_on_fulfillment_id"
+    t.index ["request_id"], name: "index_messages_on_request_id"
   end
 
   create_table "requests", force: :cascade do |t|
