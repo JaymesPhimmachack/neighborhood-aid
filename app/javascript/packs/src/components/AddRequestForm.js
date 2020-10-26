@@ -223,7 +223,7 @@ const AddRequestForm = ({ userId }) => {
             <option value='4'>4</option>
             <option value='5'>5</option>
           </Form.Control>
-
+        </Form.Group>
         <Button variant='primary' type='submit'>
           Signup
         </Button>

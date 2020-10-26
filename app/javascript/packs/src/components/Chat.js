@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Avatar from "./Avatar";
-import { Card, Form, Button, ListGroup } from "react-bootstrap";
-import { RiSendPlaneFill } from "react-icons/fa";
+import { ListGroup } from "react-bootstrap";
+import ChatRoom from "./Chatroom";
+import axios from "axios";
 import styled from "styled-components";
 
 const StyleChat = styled.div`
@@ -38,102 +38,68 @@ const StyleChat = styled.div`
   }
 `;
 
-const Chat = () => {
-  const [chatroom, setChatroom] = useState([]);
+const Chat = ({ user }) => {
+  const [chatRooms, setChatRooms] = useState([]);
+  const [roomId, setRoomId] = useState("");
+  const [currentRoom, setCurrentRoom] = useState({});
 
-  const getChatroom = async () => {
+  const getChatRooms = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/requests");
-
-      console.log(response);
+      const { data } = await axios.get("http://localhost:3000/rooms");
+      console.log(data);
+      setChatRooms(data);
     } catch (error) {
       console.log("chatroom error", error);
     }
   };
 
+  const getRoom = async () => {
+    try {
+      const { data } = await axios.get(`http://localhost:3000/rooms/${roomId}`);
+      console.log(data);
+      // setCurrentRoom(data);
+    } catch (error) {
+      console.log("current room error", error);
+    }
+  };
+
   useEffect(() => {
-    getChatroom();
+    getChatRooms();
+    console.log(chatRooms);
   }, []);
+
+  const handleRoomChange = (event) => {
+    setRoomId(event.target.dataset.id);
+    console.log(roomId);
+  };
 
   return (
     <StyleChat className='container-fluid mt-5'>
       <div className='row'>
         <div className='col-2 justify-content-around'>
           <ListGroup defaultActiveKey='#link1'>
-            <ListGroup.Item action>Room 1</ListGroup.Item>
-            <ListGroup.Item action>Room 2</ListGroup.Item>
-            <ListGroup.Item action>Room 3</ListGroup.Item>
-            <ListGroup.Item action>Room 4</ListGroup.Item>
-            <ListGroup.Item action disabled>
-              The are no rooms
-            </ListGroup.Item>
+            {chatRooms.length > 0 ? (
+              chatRooms.map((chatroom) => {
+                return (
+                  <ListGroup.Item
+                    key={chatroom.id}
+                    data-id={chatroom.id}
+                    action
+                    onClick={handleRoomChange}
+                  >
+                    {chatroom.title}
+                  </ListGroup.Item>
+                );
+              })
+            ) : (
+              <ListGroup.Item action disabled>
+                The are no rooms
+              </ListGroup.Item>
+            )}
           </ListGroup>
         </div>
         <div className='col-10'>
-          <div className='row justify-content-around'>
-            <div className='col-8'>
-              <div className='message-group'>
-                <div className='message'>
-                  <div className='message-body'>
-                    <h6>Matthew Wiggins</h6>
-                    <div>
-                      I'm going to meet a friend of mine at the department
-                      store. Yeah, I have to buy some presents for my parents.
-                    </div>
-                    <div>8 mins ago</div>
-                  </div>
-                </div>
-                <div className='message message-right'>
-                  <div className='message-body'>
-                    <h6>Simon Hensley</h6>
-                    <div>
-                      I'm going to meet a friend of mine at the department
-                      store. Yeah, I have to buy some presents for my parents.
-                    </div>
-                    <div>8 mins ago</div>
-                  </div>
-                </div>
-              </div>
-              <div className='message-form'>
-                <Form>
-                  <Form.Label htmlFor='message' srOnly>
-                    Message
-                  </Form.Label>
-                  <Form.Control
-                    type='text'
-                    id='message'
-                    placeholder='Type your message...'
-                    className='d-inline-block mr-2 w-75'
-                  />
-
-                  <Button type='submit' className='mb-2'>
-                    <RiSendPlaneFill />
-                  </Button>
-                </Form>
-              </div>
-            </div>
-            <div className='col-4'>
-              <Card>
-                <Card.Body>
-                  <div className='media'>
-                    <div className='media-body'>
-                      <span>John Smith</span>
-                    </div>
-                  </div>
-                </Card.Body>
-              </Card>
-
-              <Card>
-                <Card.Body>
-                  <div className='media'>
-                    <div className='media-body'>
-                      <span>John Smith</span>
-                    </div>
-                  </div>
-                </Card.Body>
-              </Card>
-            </div>
-          </div>
+          <ChatRoom roomId={roomId} user={user} />
         </div>
       </div>
     </StyleChat>

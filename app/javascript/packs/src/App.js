@@ -84,7 +84,10 @@ const App = () => {
           />
           <Route path='/pages/requests' component={Requests} />
           <Route path='/pages/my-request' component={MyRequest} />
-          <Route path='/pages/chat' component={Chat} />
+          <Route
+            path='/pages/chat'
+            render={(props) => <Chat {...props} user={user} />}
+          />
           <Route
             path='/pages/account'
             render={(props) => <Account {...props} user={user} />}

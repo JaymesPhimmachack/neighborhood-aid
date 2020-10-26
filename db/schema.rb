@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 2020_10_20_153450) do
     t.float "latitude"
     t.float "longitude"
     t.integer "helper_quantity"
-    t.integer "helper_fufilled"
+    t.integer "helper_fulfilled"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["owner_id"], name: "index_requests_on_owner_id"

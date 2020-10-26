@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   resources :requests, only: [:index, :create, :show, :update, :destroy]
   resources :fulfillments, only: [:index, :create, :destroy]
   resources :messages, only: [:index, :create]
+  resources :rooms, only: [:index, :show]
 
   delete    :logout, to: "sessions#logout"
   get       :logged_in, to: "sessions#logged_in"
+  mount ActionCable.server => '/cable'
 end

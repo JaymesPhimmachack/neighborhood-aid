@@ -9,7 +9,7 @@ class CreateRequests < ActiveRecord::Migration[5.2]
       t.float :latitude
       t.float :longitude
       t.integer :helper_quantity
-      t.integer :helper_fufilled
+      t.integer :helper_fulfilled
 
       t.timestamps
     end

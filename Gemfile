@@ -36,6 +36,7 @@ gem 'bcrypt', '~> 3.1.7'
 # gem 'capistrano-rails', group: :development
 
 gem 'aws-sdk-s3', require: false
+gem 'active_model_serializers'
 
 # Middleware that will make Rack-based apps CORS compatible.
 gem 'rack-cors', '~> 1.1', '>= 1.1.1'

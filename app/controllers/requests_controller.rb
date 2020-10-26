@@ -5,17 +5,12 @@ class RequestsController < ApplicationController
   def index
     @requests = Request.all
 
-    render json: {
-			status: :ok,
-			requests: @requests
-		}
+    render json: @requests
+    
   end
 
   def show
-    render json: {
-			status: :ok,
-			request: @request
-		}
+    render json: @request
   end
 
 
