@@ -10,7 +10,6 @@ import MyRequest from "./components/MyRequest";
 import Chat from "./components/Chat";
 import Account from "./components/Account";
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
   const [loggedInStatus, setLoggedInStatus] = useState("NOT_LOGGED_IN");

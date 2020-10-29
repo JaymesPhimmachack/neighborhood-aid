@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { ListGroup } from "react-bootstrap";
 import ChatRoom from "./Chatroom";
 import axios from "axios";
@@ -41,43 +41,57 @@ const StyleChat = styled.div`
 const Chat = ({ user }) => {
   const [chatRooms, setChatRooms] = useState([]);
   const [roomId, setRoomId] = useState("");
-  const [currentRoom, setCurrentRoom] = useState({});
+  const [members, setMembers] = useState(null);
+  const [messages, setMessages] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const getChatRooms = async () => {
     try {
       const { data } = await axios.get("http://localhost:3000/rooms");
-      console.log(data);
-      setChatRooms(data);
+      if (data) {
+        setChatRooms(data);
+      }
     } catch (error) {
       console.log("chatroom error", error);
     }
   };
 
-  const getRoom = async () => {
+  const getRoomData = async () => {
     try {
       const { data } = await axios.get(`http://localhost:3000/rooms/${roomId}`);
-      console.log(data);
-      // setCurrentRoom(data);
+
+      if (isMounted) {
+        setMembers(data.members);
+        setMessages(data.messages);
+      }
     } catch (error) {
       console.log("current room error", error);
     }
   };
 
   useEffect(() => {
-    getChatRooms();
-    console.log(chatRooms);
-  }, []);
+    setIsMounted(true);
 
-  const handleRoomChange = (event) => {
-    setRoomId(event.target.dataset.id);
-    console.log(roomId);
+    if (chatRooms.length === 0) {
+      getChatRooms();
+    }
+
+    if (roomId) {
+      getRoomData();
+    }
+
+    return () => setIsMounted(false);
+  }, [roomId]);
+
+  const handleRoomChange = ({ target }) => {
+    setRoomId(target.dataset.id);
   };
 
   return (
     <StyleChat className='container-fluid mt-5'>
       <div className='row'>
-        <div className='col-2 justify-content-around'>
-          <ListGroup defaultActiveKey='#link1'>
+        <div className='col-3 justify-content-around'>
+          <ListGroup>
             {chatRooms.length > 0 ? (
               chatRooms.map((chatroom) => {
                 return (
@@ -98,9 +112,16 @@ const Chat = ({ user }) => {
             )}
           </ListGroup>
         </div>
-        <div className='col-10'>
-          <ChatRoom roomId={roomId} user={user} />
-        </div>
+        {members === null && messages === null ? (
+          <div>Select a room</div>
+        ) : (
+          <ChatRoom
+            id={roomId}
+            user={user}
+            messages={messages}
+            members={members}
+          />
+        )}
       </div>
     </StyleChat>
   );

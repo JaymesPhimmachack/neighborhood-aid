@@ -33,85 +33,23 @@ requests = Request.create([
 	}
 	])
 
-	
-	fulfillment1 = Fulfillment.new([ 
-		{:request_id => 1, :volunteer_id => 5},
-		{:request_id => 1, :volunteer_id => 5}
+	fulfillments = Fulfillment.create([ 
+		{request_id: 1, volunteer_id: 5},
+		{request_id: 2, volunteer_id: 6},
+                {request_id: 3, volunteer_id: 7},
+                 {request_id: 4, volunteer_id: 8}
 		])
 	
-	message1 = Message.new({:creator_id => 1, :fulfillment_id => 1, :body => "Great! Once we get one more person, I will schedule a date."}) 
+messages = Message.create([
+         {creator_id: 5, request_id: 1, body: "Hi, I can help you "},
+         {creator_id: 1, request_id: 1, body: "Great! Once we get one more person, I will schedule a date."},
+        {creator_id: 6, request_id: 2, body: "Hi, I know how to repair a lawn mower. I can drop by after work."},
+        {creator_id: 2, request_id: 2, body: "Awesome! I'm available after 5pm"},
+       {creator_id: 7, request_id: 3, body: "Hi, I love dogs and I would like to walk your dog."},
+     {creator_id: 3, request_id: 3, body: "Hello, can you come on Sunday?"},
+   {creator_id: 8, request_id: 4, body: "I have a roll of toiler paper and I can drop it off for you"},
+  {creator_id: 4, request_id: 4, body: "Thank you! I need some some more to last the week."}      
+]) 	
+
 	
-	message5 = Message.new({:creator_id => 5, :fulfillment_id => 1, :body => "Hi, I can help you "}) 
-	
-	
-	fulfillment1.messages << message1
-	fulfillment1.messages << message5
-	
-	users[0].requests << requests[0]
-	
-	message1.fulfillment = fulfillment1
-	message5.fulfillment = fulfillment1
-	
-	users[5].fulfillments << fulfillment1
-	
-	users[5].messages << message5
-	users[0].messages << message1
-	
-	
-	
-	fulfillment2 = Fulfillment.new({:request_id => 2, :volunteer_id => 6})
-	
-	message2 = Message.new({:creator_id => 2, :fulfillment_id => 2, :body => "Awesome! I'm available after 5pm"}) 
-	message6 = Message.new({:creator_id => 6, :fulfillment_id => 2, :body => "Hi, I know how to repair a lawn mower. I can drop by after work."}) 
-	
-	fulfillment2.messages << message2
-	fulfillment2.messages << message6
-	
-	users[1].requests << requests[1]
-	
-	message2.fulfillment = fulfillment2
-	message6.fulfillment = fulfillment2
-	
-	users[6].fulfillments << fulfillment2
-	
-	users[6].messages << message6
-	users[1].messages << message2
-	
-	
-	fulfillment3 = Fulfillment.new({:request_id => 3, :volunteer_id => 7})
-	
-	message3 = Message.new({:creator_id => 3, :fulfillment_id => 3, :body => "Hello, can you come on Sunday?"}) 
-	message7 = Message.new({:creator_id => 7, :fulfillment_id => 3, :body => "Hi, I love dogs and I would like to walk your dog."}) 
-	
-	fulfillment3.messages << message3
-	fulfillment3.messages << message7
-	
-	users[2].requests << requests[2]
-	
-	message3.fulfillment = fulfillment3
-	message7.fulfillment = fulfillment3
-	
-	users[7].fulfillments << fulfillment3
-	
-	users[7].messages << message7
-	users[2].messages << message3
-	
-	
-	fulfillment4 = Fulfillment.new({:request_id => 4, :volunteer_id => 8})
-	
-	message4 = Message.new({:creator_id => 4, :fulfillment_id => 4, :body => "Thank you! I need some some more to last the week."}) 
-	message8 = Message.new({:creator_id => 8, :fulfillment_id => 4, :body => "I have a roll of toiler paper and I can drop it off for you"}) 
-	
-	fulfillment4.messages << message4
-	fulfillment4.messages << message8
-	
-	users[3].requests << requests[3]
-	
-	message4.fulfillment = fulfillment4
-	message8.fulfillment = fulfillment4
-			
-	users[8].fulfillments << fulfillment4
-	
-	users[8].messages << message8
-	users[3].messages << message4
 	

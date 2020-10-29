@@ -20,8 +20,11 @@ class FulfillmentsController < ApplicationController
 
   end
 
-
   def update
+    @request = Request.find(params[:fulfillment][:request_id])
+    @request.increment!(:helper_fulfilled)
+    @fulfillment.toggle!(:task_fulfilled)
+    
     if @fulfillment.update(fulfillment_params)
       render json: { status: :ok, fulfillment: @fulfillment }
     else

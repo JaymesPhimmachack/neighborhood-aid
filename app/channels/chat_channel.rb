@@ -1,14 +1,16 @@
 class ChatChannel < ApplicationCable::Channel
 	def subscribed
 		
-		room = Request.find(params[:id]).title
+		@request = Request.find(params[:id])
+    
+		stream_from "Chat Channel #{@request.title}"
 
-		stream_for "chat channel #{room}"
 	end	
 
 	def received(data)
-		ChatChannel.broadcast_to(room, 'Testing chat stream')
+		ChatChannel.broadcast_to("Chat Channel #{@request.title}", data)
 	end
+
 	
 	def unsubscribed
 	end	

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Avatar from "./Avatar";
-import { Card, Form, Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { IoMdSend } from "react-icons/io";
 import consumer from "../cable";
+import { ChatMember } from "./ChatMember";
+import { Message } from "./Message";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -36,42 +38,19 @@ const StyleChatRoom = styled.div`
     min-width: 2.75rem;
   }
   .message-group {
-    height: 750px;
+    height: 600px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    overflow-y: scroll;
   }
 `;
 
-const ChatRoom = ({ fulfillments, owner, roomId, user }) => {
-  const [messages, setMessages] = useState([]);
-  const [content, setContent] = useState("");
-
-  const getMessages = async () => {
-    try {
-      const { data } = await axios.get("http://localhost:3000/messages");
-      console.log(data);
-      // setMessages(data);
-    } catch (error) {
-      console.log("chatroom error", error);
-    }
-  };
-
-  const getRoomData = async () => {
-    try {
-      const { data } = await axios.get(`http://localhost:3000/rooms/${roomId}`);
-      console.log("get room data", data);
-      // setCurrentRoom(data);
-    } catch (error) {
-      console.log("current room error", error);
-    }
-  };
-
-  const renderMessages = () => {
-    return fulfillments;
-  };
-
-  const renderUsers = () => {};
+const ChatRoom = ({ id, user, members, messages }) => {
+  const [userMessage, setUserMessage] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
 
   const handleChange = (event) => {
-    setContent(event.target.value);
+    setUserMessage(event.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -79,59 +58,41 @@ const ChatRoom = ({ fulfillments, owner, roomId, user }) => {
     try {
       const { data } = await axios.post("http://localhost:3000/messages", {
         creator_id: user.id,
-        fulfillment_id: 10,
-        body: content,
+        request_id: id,
+        body: userMessage,
       });
-      console.log(data);
-      // setCurrentRoom(data);
+      setUserMessage("");
     } catch (error) {
       console.log("current room error", error);
     }
   };
 
   useEffect(() => {
-    console.log(user);
-    getRoomData();
+    setIsMounted(true);
     consumer.subscriptions.create(
       {
         channel: "ChatChannel",
-        id: roomId,
+        id: id,
       },
       {
         connected: () => console.log("connected"),
         disconnected: () => console.log("disconnected"),
-        received: (data) => {
-          console.log(data);
+        received: ({ message }) => {
+          setMessages((messages) => [...messages, message]);
+          var elem = document.getElementById("message");
+          elem.scrollTop = elem.scrollHeight;
         },
       }
     );
-  }, [roomId]);
+    return () => setIsMounted(false);
+  }, [id]);
 
   return (
-    <React.Fragment>
+    <StyleChatRoom className='col-9'>
       <div className='row justify-content-around'>
-        <div className='col-8'>
+        <div className='col-9'>
           <div className='message-group'>
-            <div className='message'>
-              <div className='message-body'>
-                <h6>Matthew Wiggins</h6>
-                <div>
-                  I'm going to meet a friend of mine at the department store.
-                  Yeah, I have to buy some presents for my parents.
-                </div>
-                <div>8 mins ago</div>
-              </div>
-            </div>
-            <div className='message message-right'>
-              <div className='message-body'>
-                <h6>Simon Hensley</h6>
-                <div>
-                  I'm going to meet a friend of mine at the department store.
-                  Yeah, I have to buy some presents for my parents.
-                </div>
-                <div>8 mins ago</div>
-              </div>
-            </div>
+            {isMounted && <Message messages={messages} user={user} />}
           </div>
           <div className='message-form'>
             <Form onSubmit={handleSubmit}>
@@ -143,7 +104,7 @@ const ChatRoom = ({ fulfillments, owner, roomId, user }) => {
                 id='message'
                 placeholder='Type your message...'
                 className='d-inline-block mr-2 w-75'
-                value={content}
+                value={userMessage}
                 onChange={handleChange}
               />
 
@@ -153,29 +114,11 @@ const ChatRoom = ({ fulfillments, owner, roomId, user }) => {
             </Form>
           </div>
         </div>
-        <div className='col-4'>
-          <Card>
-            <Card.Body>
-              <div className='media'>
-                <div className='media-body'>
-                  <span>John Smith</span>
-                </div>
-              </div>
-            </Card.Body>
-          </Card>
-
-          <Card>
-            <Card.Body>
-              <div className='media'>
-                <div className='media-body'>
-                  <span>John Smith</span>
-                </div>
-              </div>
-            </Card.Body>
-          </Card>
+        <div className='col-3'>
+          {isMounted && <ChatMember members={members} />}
         </div>
       </div>
-    </React.Fragment>
+    </StyleChatRoom>
   );
 };
 
