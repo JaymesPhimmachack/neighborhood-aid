@@ -60,6 +60,9 @@ const Header = ({ handleLogout, handleShow, name }) => {
           <Link className='nav-link' to='/pages/my-request'>
             My Request
           </Link>
+          <Link className='nav-link' to='/pages/my-volunteer-work'>
+            My Volunteer Work
+          </Link>
           <Link className='nav-link' to='/pages/chat'>
             Chat
           </Link>
