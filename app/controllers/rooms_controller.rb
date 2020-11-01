@@ -1,9 +1,23 @@
 class RoomsController < ApplicationController
 	def index
 		requests = Request.all
+
 		rooms = []
+
 		requests.each do |request|
-			rooms.push({ id: request.id, title: request.title })
+			rooms.push({ id: request.id, title: request.title, members: [] })
+		end	
+
+		requests.each_with_index do |request, idx|
+			if request.id == rooms[idx][:id]
+				rooms[idx][:members] << { id: request.owner.id, username: "#{request.owner.first_name} #{request.owner.last_name}" }
+			end	
+
+			request.fulfillments.each do |fulfillment|
+				if request.id == fulfillment.request_id
+					rooms[idx][:members] << { id: fulfillment.volunteer.id , username: "#{fulfillment.volunteer.first_name} #{fulfillment.volunteer.last_name}" }
+				end
+			end
 		end	
 		
     render json: rooms
