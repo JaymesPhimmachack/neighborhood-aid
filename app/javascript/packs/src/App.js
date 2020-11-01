@@ -7,6 +7,7 @@ import Registration from "./components/auth/Registration";
 import Requests from "./components/Requests";
 import AddRequestForm from "./components/AddRequestForm";
 import MyRequest from "./components/MyRequest";
+import MyVolunteerWork from "./components/MyVolunteerWork";
 import Chat from "./components/Chat";
 import Account from "./components/Account";
 import axios from "axios";
@@ -16,6 +17,8 @@ const App = () => {
   const [user, setUser] = useState({});
   const [show, setShow] = useState(false);
   const [showBtnClick, setBtnClick] = useState("signin");
+  const [requestData, setRequestData] = useState(null);
+  const [fulfillmentData, setFulfillmentData] = useState(null);
 
   const handleClose = () => {
     setShow(false);
@@ -27,7 +30,8 @@ const App = () => {
 
   const handleLogin = (data) => {
     setLoggedInStatus("LOGGED_IN");
-    setUser(data.user);
+    console.log("Login data", data);
+    setUser(data);
   };
 
   const handleLogout = () => {
@@ -53,8 +57,30 @@ const App = () => {
     }
   };
 
+  const getRequestData = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/requests");
+      console.log("get requests", data);
+      setRequestData(data);
+    } catch (error) {
+      console.log("Request Error", error);
+    }
+  };
+
+  const getFulfillmentData = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/fulfillments");
+      console.log("get fulfillments", data);
+      setFulfillmentData(data);
+    } catch (error) {
+      console.log("current room error", error);
+    }
+  };
+
   useEffect(() => {
     // checkLoginStatus();
+    getRequestData();
+    getFulfillmentData();
   }, []);
 
   return (
@@ -81,8 +107,30 @@ const App = () => {
               />
             )}
           />
-          <Route path='/pages/requests' component={Requests} />
-          <Route path='/pages/my-request' component={MyRequest} />
+          <Route
+            path='/pages/requests'
+            render={(props) => (
+              <Requests {...props} user={user} requestData={requestData} />
+            )}
+          />
+          <Route
+            path='/pages/my-request'
+            render={(props) => (
+              <MyRequest {...props} user={user} requestData={requestData} />
+            )}
+          />
+          <Route
+            path='/pages/my-volunteer-work'
+            render={(props) => (
+              <MyVolunteerWork
+                {...props}
+                user={user}
+                requestData={requestData}
+                volunteer_id={fulfillmentData.volunteer_id}
+                task_fulfilled={fulfillmentData.task_fulfilled}
+              />
+            )}
+          />
           <Route
             path='/pages/chat'
             render={(props) => <Chat {...props} user={user} />}

@@ -24,30 +24,32 @@ const materialNeedIcon = L.icon({
   iconSize: [50, 82],
 });
 
-const Requests = () => {
+const Requests = ({ user, history, requestData }) => {
   const [show, setShow] = useState(false);
   const [bounds, setBounds] = useState("");
   const [latlng, setLatLng] = useState([40.774, -74.125]);
+  const [markerLatLng, setMarkerLatLng] = useState([]);
   const [viewport, setViewport] = useState({
     haveUsersLocation: false,
-    latitude: 45.4211,
-    longitude: -75.6903,
-    width: "100vw",
-    height: "100vh",
-    zoom: 10,
-    markerLat: "",
-    markerLng: "",
+    latitude: 40.774,
+    longitude: -74.125,
+    width: "100%",
+    height: "700px",
+    zoom: 11,
     gotPosition: false,
   });
-  const [request, setRequest] = useState([]);
-
   const mapRef = useRef(null);
+  const popupRef = useRef();
 
-  const handleClose = () => {
+  const handleCloseForm = () => {
     setShow(false);
   };
-  const handleShow = () => {
+  const handleShowForm = () => {
     setShow(true);
+  };
+
+  const handlePopupClose = () => {
+    popupRef.current.leafletElement.options.leaflet.map.closePopup();
   };
 
   const geocode = async () => {
@@ -73,20 +75,21 @@ const Requests = () => {
     if (event.originalEvent.button === 2) {
       const { lat, lng } = event.latlng;
       console.log(lat, lng);
-      setViewport({ markerLat: lat, markerLng: lng, gotPosition: true });
+      // setMarkerLatLng(lat, lng)
     }
   };
 
   const addRequest = (event) => {
+    return (
+      <Marker
+        position={[state.markerLat, state.markerLng]}
+        icon={oneTimeTaskIcon}
+      >
+        <Popup>pop up here</Popup>
+      </Marker>
+    );
+
     console.log(event);
-    // return (
-    //   <Marker
-    //     position={[state.markerLat, state.markerLng]}
-    //     icon={oneTimeTaskIcon}
-    //   >
-    //     <Popup>pop up here</Popup>
-    //   </Marker>
-    // );
   };
 
   const handleContextMenu = (event) => {
@@ -100,17 +103,51 @@ const Requests = () => {
     if (map != null) {
       map.leafletElement.locate();
     }
-    handleShow();
+    handleShowForm();
   };
 
-  const getRequest = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/requests");
-
-      console.log(response);
-    } catch (error) {
-      console.log("Request Error", error);
-    }
+  const addRequestMarkers = () => {
+    return requestData.map(
+      ({
+        id,
+        title,
+        request_type,
+        description,
+        latitude,
+        longitude,
+        helper_quantity,
+        helper_fulfilled,
+        created_date,
+      }) => {
+        if (id === 1) {
+          return (
+            <Marker
+              key={id}
+              position={[latitude, longitude]}
+              icon={
+                request_type === "One-time task"
+                  ? oneTimeTaskIcon
+                  : materialNeedIcon
+              }
+            >
+              <Popup ref={popupRef}>
+                <Task
+                  id={id}
+                  user={user}
+                  history={history}
+                  request_type={request_type}
+                  title={title}
+                  completed={helper_fulfilled === helper_quantity}
+                  description={description}
+                  created_date={created_date}
+                  handlePopupClose={handlePopupClose}
+                />
+              </Popup>
+            </Marker>
+          );
+        }
+      }
+    );
   };
 
   useEffect(() => {
@@ -118,27 +155,25 @@ const Requests = () => {
     //   setViewport({
     //     location,
     //     haveUsersLocation: true,
-    //     zoom: 13,
     //   });
     // });
     // geocode();
     // {viewport.gotPosition ? addRequest() : null}
-
-    getRequest();
-    const southWest = mapRef.current.leafletElement.getBounds()._southWest;
-    const northEast = mapRef.current.leafletElement.getBounds()._northEast;
-
-    const mapBounds = L.latLngBounds(southWest, northEast);
-    setBounds(mapBounds);
+    // const southWest = mapRef.current.leafletElement.getBounds()._southWest;
+    // const northEast = mapRef.current.leafletElement.getBounds()._northEast;
+    // southWest = { lat: southWest.lat - 5, lng: southWest.lng - 5 };
+    // northEast = { lat: northEast.lat + 5, lng: northEast.lng + 5 };
+    // const mapBounds = L.latLngBounds(southWest, northEast);
+    // setBounds(mapBounds);
   }, []);
 
   return (
     <div className='container py-5'>
       <Map
         ref={mapRef}
-        center={[40.774, -74.125]}
-        zoom={10}
-        style={{ height: "700px", width: "100%" }}
+        center={[viewport.latitude, viewport.longitude]}
+        zoom={viewport.zoom}
+        style={{ height: viewport.height, width: viewport.width }}
         onMouseUp={getMarkerLocation}
         onContextMenu={handleContextMenu}
         onClick={handleClick}
@@ -148,15 +183,11 @@ const Requests = () => {
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        <Marker position={[40.774, -74.125]} icon={oneTimeTaskIcon}>
-          <Popup>
-            <Task />
-          </Popup>
-        </Marker>
+        {requestData && addRequestMarkers()}
       </Map>
       <Modal
         show={show}
-        onHide={handleClose}
+        onHide={handleCloseForm}
         backdrop='static'
         keyboard={false}
       >
@@ -164,7 +195,7 @@ const Requests = () => {
           <AddRequestForm />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
+          <Button variant='secondary' onClick={handleCloseForm}>
             Close
           </Button>
         </Modal.Footer>
@@ -172,7 +203,7 @@ const Requests = () => {
       <div>
         <div className='mt-3'>Open Requests: 8</div>
         <div>
-          <Button variant='secondary' onClick={handleShow}>
+          <Button variant='secondary' onClick={handleShowForm}>
             Add Request
           </Button>
         </div>

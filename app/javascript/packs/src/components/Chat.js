@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import { ListGroup } from "react-bootstrap";
 import ChatRoom from "./Chatroom";
 import axios from "axios";
@@ -72,14 +72,14 @@ const Chat = ({ user }) => {
   useEffect(() => {
     setIsMounted(true);
 
-    if (chatRooms.length === 0) {
-      getChatRooms();
-    }
+    // if (chatRooms.length === 0) {
+    getChatRooms();
+    // }
 
     if (roomId) {
       getRoomData();
     }
-
+    console.log(chatRooms);
     return () => setIsMounted(false);
   }, [roomId]);
 
@@ -87,30 +87,46 @@ const Chat = ({ user }) => {
     setRoomId(target.dataset.id);
   };
 
+  const filteredRooms = () => {
+    return chatRooms.filter((chatroom) => {
+      const result = chatroom.members.find((member) => member.id === user.id);
+
+      if (result) {
+        return chatroom;
+      }
+    });
+  };
+
+  const renderRooms = () => {
+    const rooms = filteredRooms();
+
+    if (rooms.length > 0) {
+      return rooms.map((room) => {
+        return (
+          <ListGroup.Item
+            key={room.id}
+            data-id={room.id}
+            action
+            onClick={handleRoomChange}
+          >
+            {room.title}
+          </ListGroup.Item>
+        );
+      });
+    } else {
+      return (
+        <ListGroup.Item action disabled>
+          The are no rooms
+        </ListGroup.Item>
+      );
+    }
+  };
+
   return (
     <StyleChat className='container-fluid mt-5'>
       <div className='row'>
         <div className='col-3 justify-content-around'>
-          <ListGroup>
-            {chatRooms.length > 0 ? (
-              chatRooms.map((chatroom) => {
-                return (
-                  <ListGroup.Item
-                    key={chatroom.id}
-                    data-id={chatroom.id}
-                    action
-                    onClick={handleRoomChange}
-                  >
-                    {chatroom.title}
-                  </ListGroup.Item>
-                );
-              })
-            ) : (
-              <ListGroup.Item action disabled>
-                The are no rooms
-              </ListGroup.Item>
-            )}
-          </ListGroup>
+          <ListGroup>{chatRooms.length > 0 && renderRooms()}</ListGroup>
         </div>
         {members === null && messages === null ? (
           <div>Select a room</div>
