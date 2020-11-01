@@ -28,7 +28,7 @@ const Login = ({ handleSuccessfulAuth }) => {
     try {
       const { email, password } = userInput;
 
-      const response = await axios.post(
+      const { data } = await axios.post(
         "http://localhost:3000/sessions",
         {
           user: {
@@ -44,8 +44,8 @@ const Login = ({ handleSuccessfulAuth }) => {
         password: "",
       });
 
-      if (response.data.logged_in) {
-        handleSuccessfulAuth(response.data);
+      if (data.login_status.logged_in) {
+        handleSuccessfulAuth(data);
       }
     } catch (error) {
       console.log("login error", error);

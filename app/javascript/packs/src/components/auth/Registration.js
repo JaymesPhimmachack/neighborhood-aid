@@ -34,7 +34,7 @@ const SignUp = ({ handleSuccessfulAuth }) => {
         password_confirmation,
       } = userInput;
 
-      const response = await axios.post(
+      const { data } = await axios.post(
         "http://localhost:3000/registrations",
         {
           user: {
@@ -55,9 +55,9 @@ const SignUp = ({ handleSuccessfulAuth }) => {
         password_confirmation: "",
       });
 
-      console.log(response);
-      if (response.data.status === "created") {
-        handleSuccessfulAuth(response.data);
+      console.log(data);
+      if (data.status === "created") {
+        handleSuccessfulAuth(data);
       }
     } catch (error) {
       console.log("registration error", error);
