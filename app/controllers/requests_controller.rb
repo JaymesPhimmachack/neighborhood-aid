@@ -7,10 +7,6 @@ class RequestsController < ApplicationController
     render json: @requests
   end
 
-  def show
-    render json: @request
-  end
-
   def create
     @request = Request.new(request_params)
 

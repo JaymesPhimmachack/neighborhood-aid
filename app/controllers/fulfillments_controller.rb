@@ -3,10 +3,7 @@ class FulfillmentsController < ApplicationController
 
   def index
     @fulfillments = Fulfillment.all
-    render json: {
-			status: :ok,
-			fulfillments: @fulfillments
-		}
+    render json: @fulfillments
   end
 
   def create
@@ -17,7 +14,6 @@ class FulfillmentsController < ApplicationController
     else
       render json: @fulfillment.errors.full_messages, status: :unprocessable_entity 
     end
-
   end
 
   def update
