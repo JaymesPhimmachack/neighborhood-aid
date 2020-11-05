@@ -1,53 +1,61 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Card, Form, Button } from "react-bootstrap";
+import axios from "axios";
 
 const Task = ({
   user,
   history,
-  id,
+  requestId,
   title,
   request_type,
   description,
   completed,
   created_date,
   handlePopupClose,
-  volunteer_id,
   task_fulfilled,
+  updateFulfillmentData,
+  handleVolunteerClick,
+  fulfillmentId,
+  disable_republish,
 }) => {
   const [disable, setDisable] = useState(false);
 
-  const handleRepost = async () => {
+  const handleRepublish = async () => {
     try {
-      const { data } = await axios.post("http://localhost:3000/messages", {
-        creator_id: user.id,
-        request_id: id,
-        body: userMessage,
-      });
+      const { data } = await axios.patch(
+        `http://localhost:3000/requests/${requestId}`
+      );
+      console.log(data);
     } catch (error) {
       console.log("report error", error);
     }
   };
-  const handleCompleted = async () => {
+
+  const handleRequestDelete = async () => {
     try {
-      const { data } = await axios.post("http://localhost:3000/messages", {
-        creator_id: user.id,
-        request_id: id,
-        body: userMessage,
-      });
-      setDisable(true);
+      const { data } = await axios.delete(
+        `http://localhost:3000/requests/${requestId}`
+      );
+
+      if (data.status === "no_content") {
+        console.log(data);
+      }
     } catch (error) {
       console.log("task completed error", error);
     }
   };
 
-  const handleDelete = async () => {
+  const handleFulfillmentDelete = async () => {
     try {
-      const { data } = await axios.delete("http://localhost:3000/messages", {
-        creator_id: user.id,
-        request_id: id,
-        body: userMessage,
-      });
+      const { data } = await axios.delete(
+        `http://localhost:3000/fulfillments/${fulfillmentId}`
+      );
+
+      // update state after delete
+      // if (data.status === "no_content") {
+      //   handleFulfillmentDelete(fulfillmentId);
+      // }
     } catch (error) {
       console.log("delete error", error);
     }
@@ -55,29 +63,36 @@ const Task = ({
 
   const handleFulfilled = async () => {
     try {
-      const { data } = await axios.post("http://localhost:3000/messages", {
-        creator_id: user.id,
-        request_id: id,
-        body: userMessage,
-      });
-      setDisable(true);
+      const { data } = await axios.patch(
+        `http://localhost:3000/fulfillments/${fulfillmentId}`,
+        {
+          request_id: requestId,
+          volunteer_id: user.id,
+          task_fulfilled: true,
+        }
+      );
+      console.log(data);
+      // get data back and update state and disable delete button
+      // if (data.status === 202) {
+      //   setDisable(true);
+      //   updateFulfillmentData(data);
+      // }
     } catch (error) {
       console.log("fulfillment error", error);
     }
   };
 
-  const handleCancel = () => {
-    handleClose();
-  };
-
   const handleVolunteer = async () => {
     try {
-      const { data } = await axios.post("http://localhost:3000/messages", {
-        creator_id: user.id,
-        request_id: id,
-        body: userMessage,
+      const { data } = await axios.post("http://localhost:3000/fulfillments", {
+        request_id: requestId,
+        volunteer_id: user.id,
       });
-      history.push("/pages/chat");
+      console.log(data);
+      // if (data.status === 201) {
+      // updateFulfillmentData(data);
+      // handleVolunteerClick();
+      // }
     } catch (error) {
       console.log("volunteer error", error);
     }
@@ -85,31 +100,32 @@ const Task = ({
 
   const renderButtons = () => {
     console.log("history data", history);
-    if (history.pathname === "/pages/my-request") {
+    if (history.location.pathname === "/pages/my-request") {
       return (
         <div className='d-flex justify-content-around'>
           <Button
-            variant='secondary'
-            onClick={handleRepost}
+            variant='danger'
+            onClick={handleRequestDelete}
+            disabled={task_fulfilled}
             disabled={completed}
           >
-            Repost
+            Delete
           </Button>
           <Button
-            variant='primary'
-            onClick={handleCompleted}
-            disabled={completed}
+            variant='secondary'
+            onClick={handleRepublish}
+            disabled={completed || disable_republish}
           >
-            Completed
+            Republish
           </Button>
         </div>
       );
-    } else if (history.pathname === "/pages/my-volunteer-work") {
+    } else if (history.location.pathname === "/pages/my-volunteer-work") {
       return (
         <div className='d-flex justify-content-around'>
           <Button
-            variant='secondary'
-            onClick={handleDelete}
+            variant='danger'
+            onClick={handleFulfillmentDelete}
             disabled={task_fulfilled}
           >
             Delete
@@ -139,19 +155,18 @@ const Task = ({
 
   return (
     <Card style={{ width: "15rem" }}>
-      <Card.Header>One-time task 2/15/20</Card.Header>
+      <Card.Header>
+        <div>{request_type}</div>
+        <div>{created_date}</div>
+      </Card.Header>
       <Card.Body>
-        <Card.Title className='mb-3'>Lawn mower broken</Card.Title>
+        <Card.Title className='mb-3'>{title}</Card.Title>
         <Card.Subtitle className='mb-2 text-muted mb-3'>
-          Status: unfulfilled
+          Status:
+          {completed ? "fulfilled" : "unfulfilled"}
         </Card.Subtitle>
-        <Card.Text className='mb-4'>
-          I need help repairing my lawn mower.
-        </Card.Text>
-        <div className='d-flex justify-content-around'>
-          <Button variant='secondary'>Cancel</Button>
-          <Button variant='primary'>Volunteer</Button>
-        </div>
+        <Card.Text className='mb-4'>{description}</Card.Text>
+        {renderButtons()}
       </Card.Body>
     </Card>
   );

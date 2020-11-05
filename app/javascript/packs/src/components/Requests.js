@@ -24,11 +24,18 @@ const materialNeedIcon = L.icon({
   iconSize: [50, 82],
 });
 
-const Requests = ({ user, history, requestData }) => {
+const Requests = ({
+  user,
+  history,
+  requestData,
+  updateRequestData,
+  updateFulfillmentData,
+}) => {
   const [show, setShow] = useState(false);
   const [bounds, setBounds] = useState("");
-  const [latlng, setLatLng] = useState([40.774, -74.125]);
-  const [markerLatLng, setMarkerLatLng] = useState([]);
+  const [mapLatlng, setMapLatLng] = useState([40.774, -74.125]);
+  const [markerLatLng, setMarkerLatLng] = useState({});
+  const [markerAddress, setMarkerAddress] = useState();
   const [viewport, setViewport] = useState({
     haveUsersLocation: false,
     latitude: 40.774,
@@ -52,30 +59,25 @@ const Requests = ({ user, history, requestData }) => {
     popupRef.current.leafletElement.options.leaflet.map.closePopup();
   };
 
-  const geocode = async () => {
-    try {
-      const location = "405 terminal avenue ottawa canada";
-      const response = await axios.get(
-        "https://maps.googleapis.com/maps/api/geocode/json",
-        {
-          params: {
-            address: location,
-            key: "AIzaSyCJJw8_N5oQ4SjowByhxK-ybK0FWbho4DE",
-          },
-        }
-      );
-
-      console.log(response);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
   const getMarkerLocation = (event) => {
     if (event.originalEvent.button === 2) {
       const { lat, lng } = event.latlng;
-      console.log(lat, lng);
-      // setMarkerLatLng(lat, lng)
+
+      setMarkerLatLng({ lat, lng });
+      getAddressByLatLng(lat, lng);
+    }
+  };
+
+  const getAddressByLatLng = async (lat, lng) => {
+    const API_URL =
+      "https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=<%=Rails.application.credentials.google[:google_map_api_key]%>";
+    try {
+      const { data } = await axios.get(API_URL);
+      console.log(data);
+      setMarkerAddress(data.results[0].formatted_address);
+      handleShowForm();
+    } catch (error) {
+      console.log("get addresss error", error);
     }
   };
 
@@ -107,7 +109,7 @@ const Requests = ({ user, history, requestData }) => {
   };
 
   const addRequestMarkers = () => {
-    return requestData.map(
+    const requestMarkers = requestData.map(
       ({
         id,
         title,
@@ -132,7 +134,7 @@ const Requests = ({ user, history, requestData }) => {
             >
               <Popup ref={popupRef}>
                 <Task
-                  id={id}
+                  requestId={id}
                   user={user}
                   history={history}
                   request_type={request_type}
@@ -141,6 +143,8 @@ const Requests = ({ user, history, requestData }) => {
                   description={description}
                   created_date={created_date}
                   handlePopupClose={handlePopupClose}
+                  updateFulfillmentData={updateFulfillmentData}
+                  handleVolunteerClick={handleVolunteerClick}
                 />
               </Popup>
             </Marker>
@@ -148,16 +152,23 @@ const Requests = ({ user, history, requestData }) => {
         }
       }
     );
+    console.log("request marker", requestMarkers);
+    return requestMarkers;
+  };
+
+  const handleVolunteerClick = () => {
+    history.push("/pages/chat");
   };
 
   useEffect(() => {
+    // console.log(process.env.REACT_APP_GOOGLE_API_KEY);
     // getUserLocation().then((location) => {
     //   setViewport({
     //     location,
     //     haveUsersLocation: true,
     //   });
     // });
-    // geocode();
+    // after getting user position list requests
     // {viewport.gotPosition ? addRequest() : null}
     // const southWest = mapRef.current.leafletElement.getBounds()._southWest;
     // const northEast = mapRef.current.leafletElement.getBounds()._northEast;
@@ -165,6 +176,13 @@ const Requests = ({ user, history, requestData }) => {
     // northEast = { lat: northEast.lat + 5, lng: northEast.lng + 5 };
     // const mapBounds = L.latLngBounds(southWest, northEast);
     // setBounds(mapBounds);
+    // let getRequestCountInterval = setInterval(() => {
+    // getRequestCount()
+    // loop through user, get request count, and add up users requests
+    // }, 5000);
+    // return () => {
+    //   clearInterval(getRequestCountInterval);
+    // };
   }, []);
 
   return (
@@ -192,7 +210,13 @@ const Requests = ({ user, history, requestData }) => {
         keyboard={false}
       >
         <Modal.Body>
-          <AddRequestForm />
+          <AddRequestForm
+            userId={user.id}
+            updateRequestData={updateRequestData}
+            markerLatLng={markerLatLng}
+            markerAddress={markerAddress}
+            handleCloseForm={handleCloseForm}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant='secondary' onClick={handleCloseForm}>
@@ -201,7 +225,7 @@ const Requests = ({ user, history, requestData }) => {
         </Modal.Footer>
       </Modal>
       <div>
-        <div className='mt-3'>Open Requests: 8</div>
+        <div className='my-3'>Open Requests: 8</div>
         <div>
           <Button variant='secondary' onClick={handleShowForm}>
             Add Request

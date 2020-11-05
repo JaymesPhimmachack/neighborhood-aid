@@ -42,7 +42,7 @@ const Chat = ({ user }) => {
   const [chatRooms, setChatRooms] = useState([]);
   const [roomId, setRoomId] = useState("");
   const [members, setMembers] = useState(null);
-  const [messages, setMessages] = useState(null);
+  const [roomMessages, setRoomMessages] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
 
   const getChatRooms = async () => {
@@ -62,7 +62,7 @@ const Chat = ({ user }) => {
 
       if (isMounted) {
         setMembers(data.members);
-        setMessages(data.messages);
+        setRoomMessages(data.messages);
       }
     } catch (error) {
       console.log("current room error", error);
@@ -72,9 +72,9 @@ const Chat = ({ user }) => {
   useEffect(() => {
     setIsMounted(true);
 
-    // if (chatRooms.length === 0) {
-    getChatRooms();
-    // }
+    if (chatRooms.length === 0) {
+      getChatRooms();
+    }
 
     if (roomId) {
       getRoomData();
@@ -126,15 +126,17 @@ const Chat = ({ user }) => {
     <StyleChat className='container-fluid mt-5'>
       <div className='row'>
         <div className='col-3 justify-content-around'>
+          <h2>Chat Rooms</h2>
           <ListGroup>{chatRooms.length > 0 && renderRooms()}</ListGroup>
         </div>
-        {members === null && messages === null ? (
+        {members === null && roomMessages === null ? (
           <div>Select a room</div>
         ) : (
           <ChatRoom
             id={roomId}
             user={user}
-            messages={messages}
+            setRoomMessages={setRoomMessages}
+            roomMessages={roomMessages}
             members={members}
           />
         )}

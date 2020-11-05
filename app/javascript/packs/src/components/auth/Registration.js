@@ -56,7 +56,7 @@ const SignUp = ({ handleSuccessfulAuth }) => {
       });
 
       console.log(data);
-      if (data.status === "created") {
+      if (data.status === 201) {
         handleSuccessfulAuth(data);
       }
     } catch (error) {
@@ -85,6 +85,7 @@ const SignUp = ({ handleSuccessfulAuth }) => {
             name='first_name'
             value={userInput.first_name}
             onChange={handleChange}
+            required
           />
         </Form.Group>
         <Form.Group>
@@ -94,6 +95,7 @@ const SignUp = ({ handleSuccessfulAuth }) => {
             name='last_name'
             value={userInput.last_name}
             onChange={handleChange}
+            required
           />
         </Form.Group>
         <Form.Label>Email</Form.Label>
@@ -103,6 +105,7 @@ const SignUp = ({ handleSuccessfulAuth }) => {
             name='email'
             value={userInput.email}
             onChange={handleChange}
+            required
           />
         </Form.Group>
         <Form.Label>Password</Form.Label>
@@ -112,6 +115,7 @@ const SignUp = ({ handleSuccessfulAuth }) => {
             name='password'
             value={userInput.password}
             onChange={handleChange}
+            required
           />
         </Form.Group>
         <Form.Label>Password Confirmation</Form.Label>
@@ -121,6 +125,7 @@ const SignUp = ({ handleSuccessfulAuth }) => {
             name='password_confirmation'
             value={userInput.password_confirmation}
             onChange={handleChange}
+            required
           />
         </Form.Group>
         <Form.Group>

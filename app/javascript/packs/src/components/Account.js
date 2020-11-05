@@ -10,7 +10,7 @@ const StyledAccount = styled.div`
   margin: 0 auto;
 `;
 
-const Account = ({ history, user }) => {
+const Account = ({ history, user, updateUser, deleteUser }) => {
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -55,8 +55,8 @@ const Account = ({ history, user }) => {
       password_confirmation,
     } = userInput;
     try {
-      const response = await axios.patch(
-        `http://localhost:3000/registrations/${userInput.id}`,
+      const { data } = await axios.patch(
+        `http://localhost:3000/registrations/${user.id}`,
         {
           user: {
             first_name,
@@ -68,9 +68,14 @@ const Account = ({ history, user }) => {
         },
         { withCredentials: true }
       );
-      console.log(response);
-      if (response.data.status === 200) {
-        // this.props.handleSuccessfulAuth(response.data);
+      console.log(data);
+      if (data.status === 202) {
+        updateUser(data);
+
+        setUserInput({
+          password: "",
+          password_confirmation: "",
+        });
       }
     } catch (error) {
       console.log("registration error", error);
@@ -79,10 +84,11 @@ const Account = ({ history, user }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(
-        `http://localhost:3000/registrations/${userInput.id}`
+      const { data } = await axios.delete(
+        `http://localhost:3000/registrations/${user.id}`
       );
-      if (response.data.status === "no_content") {
+      if (data.status === "no_content") {
+        deleteUser();
         history.push("/");
       }
     } catch (error) {
@@ -92,7 +98,7 @@ const Account = ({ history, user }) => {
 
   return (
     <StyledAccount>
-      <Avatar />
+      <Avatar photoUrl={user.photo_url} />
 
       <Form onSubmit={handleSubmit}>
         <Form.Group>
@@ -129,6 +135,7 @@ const Account = ({ history, user }) => {
             name='password'
             value={userInput.password}
             onChange={handleChange}
+            required
           />
         </Form.Group>
         <Form.Label>Password Confirmation</Form.Label>
@@ -138,6 +145,7 @@ const Account = ({ history, user }) => {
             name='password_confirmation'
             value={userInput.password_confirmation}
             onChange={handleChange}
+            required
           />
         </Form.Group>
         <Form.Group>

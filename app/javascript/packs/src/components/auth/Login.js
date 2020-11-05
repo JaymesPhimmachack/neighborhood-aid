@@ -44,7 +44,7 @@ const Login = ({ handleSuccessfulAuth }) => {
         password: "",
       });
 
-      if (data.login_status.logged_in) {
+      if (data.logged_in) {
         handleSuccessfulAuth(data);
       }
     } catch (error) {

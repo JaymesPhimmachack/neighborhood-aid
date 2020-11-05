@@ -45,7 +45,7 @@ const StyleChatRoom = styled.div`
   }
 `;
 
-const ChatRoom = ({ id, user, members, messages }) => {
+const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
   const [userMessage, setUserMessage] = useState("");
   const [isMounted, setIsMounted] = useState(false);
 
@@ -78,9 +78,10 @@ const ChatRoom = ({ id, user, members, messages }) => {
         connected: () => console.log("connected"),
         disconnected: () => console.log("disconnected"),
         received: ({ message }) => {
-          setMessages((messages) => [...messages, message]);
-          var elem = document.getElementById("message");
-          elem.scrollTop = elem.scrollHeight;
+          console.log("testing receiving message", message);
+          setRoomMessages((currentState) => [...currentState, message]);
+          // var elem = document.getElementById("message");
+          // elem.scrollTop = elem.scrollHeight;
         },
       }
     );
@@ -92,7 +93,7 @@ const ChatRoom = ({ id, user, members, messages }) => {
       <div className='row justify-content-around'>
         <div className='col-9'>
           <div className='message-group'>
-            {isMounted && <Message messages={messages} user={user} />}
+            {isMounted && <Message messages={roomMessages} user={user} />}
           </div>
           <div className='message-form'>
             <Form onSubmit={handleSubmit}>

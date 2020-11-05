@@ -1,11 +1,7 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
+import LocationSearchInput from "./LocationSearchInput";
+import axios from "axios";
 import { Form, Button } from "react-bootstrap";
-import {
-  geocodeByAddress,
-  geocodeByPlaceId,
-  getLatLng,
-} from "react-places-autocomplete";
-import PlacesAutocomplete from "react-places-autocomplete";
 import styled from "styled-components";
 
 const Styles = styled.div`
@@ -47,7 +43,13 @@ const Styles = styled.div`
   }
 `;
 
-const AddRequestForm = ({ userId }) => {
+const AddRequestForm = ({
+  userId,
+  updateRequestData,
+  markerLatLng,
+  markerAddress,
+  handleCloseForm,
+}) => {
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -65,12 +67,6 @@ const AddRequestForm = ({ userId }) => {
     const name = evt.target.name;
     const newValue = evt.target.value;
     setUserInput({ [name]: newValue });
-    if (name === "address") {
-      geocodeByAddress(address)
-        .then((results) => getLatLng(results[0]))
-        .then((latLng) => console.log("Success", latLng))
-        .catch((error) => console.error("Error", error));
-    }
   };
 
   const handleSubmit = async (event) => {
@@ -85,9 +81,10 @@ const AddRequestForm = ({ userId }) => {
       longitude,
       helper_quantity,
     } = userInput;
+
     try {
-      const response = await axios.post(
-        "http://localhost:3000/reguests",
+      const { data } = await axios.post(
+        "http://localhost:3000/requests",
         {
           request: {
             owner_id: userId,
@@ -111,25 +108,27 @@ const AddRequestForm = ({ userId }) => {
         longitude: "",
         helper_quantity: "",
       });
-      console.log(response);
-      if (response.data.status === 200) {
-      }
+      handleCloseForm();
+      console.log(data);
     } catch (error) {
       console.log("add request error", error);
     }
   };
 
-  const handleSelect = async (value) => {
-    const results = await geocodeByAddress(value);
-    const latLng = await getLatLng(results[0]);
-    setAddress(value);
-    setCoordinates(latLng);
-  };
+  useEffect(() => {
+    setUserInput({
+      latitude: markerLatLng.lat,
+      longitude: markerLatLng.lng,
+      address: markerAddress,
+    });
+    console.log(typeof markerAddress);
+    console.log(userInput, markerLatLng, markerAddress);
+  }, [markerLatLng, markerAddress]);
 
   return (
     <Styles>
       <h1 className='text-center mb-5'>Add Request</h1>
-      <Form onSubmit={handleChange}>
+      <Form onSubmit={handleSubmit}>
         <Form.Group controlId='exampleForm.ControlSelect1'>
           <Form.Label>Request Type</Form.Label>
           <Form.Control
@@ -138,6 +137,9 @@ const AddRequestForm = ({ userId }) => {
             value={userInput.request_type}
             onChange={handleChange}
           >
+            <option disabled value=''>
+              Select
+            </option>
             <option value='one-time task'>One-time task</option>
             <option value='material needs'>Material needs</option>
           </Form.Control>
@@ -164,49 +166,10 @@ const AddRequestForm = ({ userId }) => {
 
         <Form.Group>
           <Form.Label>Address</Form.Label>
-          <PlacesAutocomplete
-            value={userInput.address}
-            onChange={handleChange}
-            onSelect={handleSelect}
-          >
-            {({
-              getInputProps,
-              suggestions,
-              getSuggestionItemProps,
-              loading,
-            }) => (
-              <div>
-                <Form.Control
-                  type='text'
-                  name='address'
-                  // value={userInput.address}
-                  // onChange={handleChange}
-                  id='pac-input' // Do not change the value of id here. if you do, it wont work with google map API
-                  className='controls'
-                />
-                <div className='autocomplete-dropdown-container'>
-                  {loading && <div>Loading...</div>}
-                  {suggestions.map((suggestion) => {
-                    // inline style for demonstration purpose
-                    const style = suggestion.active
-                      ? { backgroundColor: "#42a5f5", cursor: "pointer" }
-                      : { backgroundColor: "#ffffff", cursor: "pointer" };
-                    return (
-                      <div
-                        className='input-suggestion'
-                        {...getSuggestionItemProps(suggestion, {
-                          style,
-                        })}
-                      >
-                        <i class='material-icons'>location_on </i>{" "}
-                        <span>{suggestion.description}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </PlacesAutocomplete>
+          <LocationSearchInput
+            setUserInput={setUserInput}
+            userAddress={userInput.address}
+          />
         </Form.Group>
 
         <Form.Group>
@@ -217,6 +180,9 @@ const AddRequestForm = ({ userId }) => {
             value={userInput.helper_quantity}
             onChange={handleChange}
           >
+            <option disabled value=''>
+              Select
+            </option>
             <option value='1'>1</option>
             <option value='2'>2</option>
             <option value='3'>3</option>
@@ -225,7 +191,7 @@ const AddRequestForm = ({ userId }) => {
           </Form.Control>
         </Form.Group>
         <Button variant='primary' type='submit'>
-          Signup
+          Add Request
         </Button>
       </Form>
     </Styles>

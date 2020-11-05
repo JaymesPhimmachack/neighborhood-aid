@@ -8,7 +8,9 @@ export const ChatMember = ({ members }) => {
         <Card.Body>
           <div className='media'>
             <div className='media-body'>
-              <span>{member.username}</span>
+              <span>
+                {member.first_name} {member.last_name}
+              </span>
             </div>
           </div>
         </Card.Body>

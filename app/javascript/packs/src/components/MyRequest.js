@@ -11,18 +11,17 @@ const StyleMyRequest = styled.div`
 const MyRequest = ({ user, history, requestData }) => {
   const filteredRequest = () => {
     return requestData.filter((request) => {
-      if (request.owner_id === user.id) {
+      if (request.owner.id === user.id) {
         return request;
       }
     });
   };
   const renderRequests = () => {
     const requests = filteredRequest();
-
+    console.log(requests);
     if (requests.length > 0) {
       return requests.map(
         ({
-          owner_id,
           id,
           title,
           request_type,
@@ -30,22 +29,22 @@ const MyRequest = ({ user, history, requestData }) => {
           helper_quantity,
           helper_fulfilled,
           created_date,
+          disable_republish,
         }) => {
-          if (owner_id === user.id) {
-            return (
-              <Task
-                key={id}
-                user={user}
-                history={history}
-                id={id}
-                request_type={request_type}
-                title={title}
-                completed={helper_fulfilled === helper_quantity}
-                description={description}
-                created_date={created_date}
-              />
-            );
-          }
+          return (
+            <Task
+              key={id}
+              user={user}
+              history={history}
+              requestId={id}
+              request_type={request_type}
+              title={title}
+              completed={helper_fulfilled === helper_quantity}
+              description={description}
+              created_date={created_date}
+              disable_republish={disable_republish}
+            />
+          );
         }
       );
     } else {

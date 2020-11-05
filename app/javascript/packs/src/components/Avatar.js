@@ -1,5 +1,4 @@
 import React from "react";
-import ProfileImage from "../../../../assets/images/model-2911331_640.jpg";
 import styled from "styled-components";
 
 const StyledImage = styled.div`
@@ -8,6 +7,6 @@ const StyledImage = styled.div`
   border-radius: 50%;
 `;
 
-const Avatar = () => <img src={ProfileImage} alt='avatar' />;
+const Avatar = ({ photoUrl }) => <img src={photoUrl} alt='avatar' />;
 
 export default Avatar;

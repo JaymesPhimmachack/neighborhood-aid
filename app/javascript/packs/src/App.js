@@ -57,6 +57,14 @@ const App = () => {
     }
   };
 
+  const updateUser = (newUserData) => {
+    setUser({ ...user, ...newUserData });
+  };
+
+  const deleteUser = () => {
+    setUser({});
+  };
+
   const getRequestData = async () => {
     try {
       const { data } = await axios.get("http://localhost:3000/requests");
@@ -75,6 +83,24 @@ const App = () => {
     } catch (error) {
       console.log("current room error", error);
     }
+  };
+
+  const updateRequestData = (newRequestData) => {
+    setRequestData([...requestData, ...newRequestData]);
+  };
+
+  const updateFulfillmentData = (newFulfillmentData) => {
+    console.log("new fulfill data", [
+      ...fulfillmentData,
+      ...newFulfillmentData,
+    ]);
+    // setFulfillmentData([...fulfillmentData, ...newFulfillmentData]);
+  };
+
+  const handleFulfillmentDelete = (id) => {
+    console.log(fulfillmentData);
+    // fulfillments = fulfillmentData.filter()
+    // setFulfillmentData(fulfillments);
   };
 
   useEffect(() => {
@@ -110,7 +136,13 @@ const App = () => {
           <Route
             path='/pages/requests'
             render={(props) => (
-              <Requests {...props} user={user} requestData={requestData} />
+              <Requests
+                {...props}
+                user={user}
+                requestData={requestData}
+                updateRequestData={updateRequestData}
+                updateFulfillmentData={updateFulfillmentData}
+              />
             )}
           />
           <Route
@@ -126,8 +158,9 @@ const App = () => {
                 {...props}
                 user={user}
                 requestData={requestData}
-                volunteer_id={fulfillmentData.volunteer_id}
                 task_fulfilled={fulfillmentData.task_fulfilled}
+                fulfillmentData={fulfillmentData}
+                handleFulfillmentDelete={handleFulfillmentDelete}
               />
             )}
           />
@@ -137,7 +170,14 @@ const App = () => {
           />
           <Route
             path='/pages/account'
-            render={(props) => <Account {...props} user={user} />}
+            render={(props) => (
+              <Account
+                {...props}
+                user={user}
+                updateUser={updateUser}
+                deleteUser={deleteUser}
+              />
+            )}
           />
         </Switch>
       </Router>

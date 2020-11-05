@@ -11,6 +11,7 @@ const StyleMessage = styled.div`
 `;
 
 export const Message = ({ messages, user }) => {
+  console.log(messages);
   return messages.map((message) => {
     return (
       <StyleMessage
@@ -21,7 +22,9 @@ export const Message = ({ messages, user }) => {
         id='message'
       >
         <div className='message-body'>
-          <h6>{message.username}</h6>
+          <h6>
+            {message.first_name} {message.last_name}
+          </h6>
           <div>{message.content}</div>
           <small>{message.created_at}</small>
         </div>
