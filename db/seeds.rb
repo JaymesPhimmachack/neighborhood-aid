@@ -8,7 +8,8 @@
 
 
 users = User.create([
-	{first_name: 'Jacquetta', last_name: 'Pellegrini', email: 'jpellegrini@email.com', password: 'password1', password_confirmation: 'password1'},
+	{first_name: 'Jacquetta', last_name: 'Pellegrini', email: 'jpellegrini@email.com', password: 'password1', password_confirmation: 'password1'
+	},
 	{first_name: 'Alice', last_name: 'Hall', email: 'ahall@email.com', password: 'password2', password_confirmation: 'password2'},
 	{first_name: 'Robert', last_name: 'Gilman', email: 'rgilman@email.com', password: 'password3', password_confirmation: 'password3'},
 	{first_name: 'Tina', last_name: 'Brooks', email: 'tbrooks@email.com', password: 'password4', password_confirmation: 'password4'},
@@ -22,14 +23,21 @@ users = User.create([
 	{first_name: 'Gary', last_name: 'Snow', email: 'gsnow@email.com', password: 'password12', password_confirmation: 'password12'}
 	])
 
+users.each do |user|
+	user.photo.attach(
+    io: File.open(Rails.public_path.join("packs/media/images/#{user.first_name.downcase}.jpg").to_s),
+    filename: "#{user.first_name.downcase}.jpg"
+	)
+end
+
 requests = Request.create([
-	{owner_id: 1, title: 'Heavy furniture help', request_type: 'One-time task', description: 'I need help carrying a piece of heavy furniture.', address: '3190 Bicetown Road New York, New York City, NY 10007', latitude: 40.713050, longitude: -74.007230, helper_quantity: 3
+	{owner_id: 1, title: "Heavy furniture help", request_type: "One-time task", description: "I need help carrying a piece of heavy furniture.", address: "3190 Bicetown Road New York, New York City, NY 10007", latitude: 40.713050, longitude: -74.007230, helper_quantity: 3
 	},
-	{owner_id: 2, title: 'Lawn mower broken', request_type: 'One-time task', description: 'I need help repairing my lawn mower.', address: '1836 Geneva Street New York, New York City, NY 10007', latitude: 42.880090, longitude: -76.951910, helper_quantity: 3
+	{owner_id: 2, title: "Lawn mower broken", request_type: "One-time task", description: "I need help repairing my lawn mower.", address: "60 Huck Rd, Bloomfield, NJ 07003", latitude: 40.622570, longitude: -74.351230, helper_quantity: 3
 	},
-	{owner_id: 3, title: 'Dog walker needed', request_type: 'One-time task', description: 'I need someone to walk my dog.', address: '1896 Shinn Street New York, New York City, NY 10007', latitude: 40.713050, longitude: -74.007230, helper_quantity: 3
+	{owner_id: 3, title: "Dog walker needed", request_type: "One-time task", description: "I need someone to walk my dog.", address: "1934 Raritan Rd, Scotch Plains, NJ 07076", latitude: 40.622570, longitude: -74.351227, helper_quantity: 3
 	},
-	{owner_id: 4, title: 'No more toiler paper', request_type: 'One-time task', description: 'I need some toiler paper. Because of covid 19 I ran out and no store have some in stock.', address: '2906 Farnum Road New York, New York City, NY 10007', latitude: 42.028770, longitude: -78.025600, helper_quantity: 3
+	{owner_id: 4, title: "No more toiler paper", request_type: "Material need", description: "I need some toiler paper. Because of covid 19 I ran out and no store have some in stock.", address: "107-34 121st St, Queens, NY 11419", latitude: 40.688550, longitude: -73.822940, helper_quantity: 3
 	}
 	])
 

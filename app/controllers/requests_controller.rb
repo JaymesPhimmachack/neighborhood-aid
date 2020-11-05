@@ -11,18 +11,16 @@ class RequestsController < ApplicationController
     @request = Request.new(request_params)
 
     if @request.save
-      render json: { status: :created, request: @request }
+      render json: @request, status: 201
     else
       render json: @request.errors.full_messages, status: :unprocessable_entity 
     end
   end
 
   def update
-    if @request.update(request_params)
-      render json: {
-        status: :ok,
-        request: @request
-      }
+    @request.helper_fulfilled = 0
+    if @request.fulfillments.destroy_all
+      render json: @request
     else
       render json: { status: :bad_request }
     end	
@@ -35,12 +33,11 @@ class RequestsController < ApplicationController
   end
 
   private
-
     def set_request
       @request = Request.find(params[:id])
     end
 
     def request_params
-      params.fetch(:request, {}).permit(:owner_id, :title, :request_type, :description, :address, :latitude, :longitude, :helper_quantity)
+      params.require(:request).permit(:owner_id, :title, :request_type, :description, :address, :latitude, :longitude, :helper_quantity)
     end
 end

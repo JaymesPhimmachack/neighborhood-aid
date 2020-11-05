@@ -9,7 +9,7 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
     />
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJJw8_N5oQ4SjowByhxK-ybK0FWbho4DE&libraries=places"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=<%=Rails.application.credentials.google[:google_map_api_key]%>&libraries=places"></script>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">

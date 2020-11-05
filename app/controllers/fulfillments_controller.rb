@@ -10,19 +10,20 @@ class FulfillmentsController < ApplicationController
     @fulfillment = Fulfillment.new(fulfillment_params)
 
     if @fulfillment.save
-      render json: { status: :ok, fulfillment: @fulfillment }
+      render json: @fulfillment, status: 201
     else
       render json: @fulfillment.errors.full_messages, status: :unprocessable_entity 
     end
   end
 
   def update
-    @request = Request.find(params[:fulfillment][:request_id])
+    id = @fulfillment.request_id
+    @request = Request.find(id)
     @request.increment!(:helper_fulfilled)
-    @fulfillment.toggle!(:task_fulfilled)
+
     
     if @fulfillment.update(fulfillment_params)
-      render json: { status: :ok, fulfillment: @fulfillment }
+      render json: @fulfillment, status: 202
     else
       render json: @fulfillment.errors.full_messages, status: :unprocessable_entity 
     end
@@ -34,13 +35,11 @@ class FulfillmentsController < ApplicationController
   end
 
   private
-
     def set_fulfillment
       @fulfillment = Fulfillment.find(params[:id])
     end
 
-
     def fulfillment_params
-      params.fetch(:fulfillment, {}).permit(:request_id, :volunteer_id, :task_fulfilled)
+      params.require(:fulfillment).permit(:request_id, :volunteer_id, :task_fulfilled)
     end
 end
