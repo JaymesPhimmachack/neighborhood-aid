@@ -7,7 +7,6 @@ import styled from "styled-components";
 import { Modal, Button } from "react-bootstrap";
 import oneTimeTaskUrl from "../../../../assets/images/one_time_task.svg";
 import materialNeedUrl from "../../../../assets/images/material_need.svg";
-import { getUserLocation } from "./actions/index";
 import axios from "axios";
 
 var corner1 = L.latLng(40.712, -74.227),
@@ -28,12 +27,11 @@ const Requests = ({
   user,
   history,
   requestData,
-  updateRequestData,
-  updateFulfillmentData,
+  addRequestData,
+  addFulfillmentData,
 }) => {
   const [show, setShow] = useState(false);
   const [bounds, setBounds] = useState("");
-  const [mapLatlng, setMapLatLng] = useState([40.774, -74.125]);
   const [markerLatLng, setMarkerLatLng] = useState({});
   const [markerAddress, setMarkerAddress] = useState();
   const [viewport, setViewport] = useState({
@@ -60,12 +58,12 @@ const Requests = ({
   };
 
   const getMarkerLocation = (event) => {
-    if (event.originalEvent.button === 2) {
-      const { lat, lng } = event.latlng;
-
-      setMarkerLatLng({ lat, lng });
-      getAddressByLatLng(lat, lng);
-    }
+    // Add feature later
+    // if (event.originalEvent.button === 2) {
+    //   const { lat, lng } = event.latlng;
+    // setMarkerLatLng({ lat, lng });
+    // getAddressByLatLng(lat, lng);
+    // }
   };
 
   const getAddressByLatLng = async (lat, lng) => {
@@ -81,24 +79,9 @@ const Requests = ({
     }
   };
 
-  const addRequest = (event) => {
-    return (
-      <Marker
-        position={[state.markerLat, state.markerLng]}
-        icon={oneTimeTaskIcon}
-      >
-        <Popup>pop up here</Popup>
-      </Marker>
-    );
-
-    console.log(event);
-  };
-
   const handleContextMenu = (event) => {
     return false;
   };
-
-  const handleMarkerClick = () => {};
 
   const handleClick = () => {
     const map = mapRef.current;
@@ -108,8 +91,18 @@ const Requests = ({
     handleShowForm();
   };
 
-  const addRequestMarkers = () => {
-    const requestMarkers = requestData.map(
+  const filteredRequest = () => {
+    return requestData.filter((request) => {
+      if (request.hide_item) {
+        return request;
+      }
+    });
+  };
+
+  const renderRequestMarkers = () => {
+    const requests = filteredRequest();
+
+    return requests.map(
       ({
         id,
         title,
@@ -120,40 +113,54 @@ const Requests = ({
         helper_quantity,
         helper_fulfilled,
         created_date,
+        owner,
+        fulfillments,
       }) => {
-        if (id === 1) {
-          return (
-            <Marker
-              key={id}
-              position={[latitude, longitude]}
-              icon={
-                request_type === "One-time task"
-                  ? oneTimeTaskIcon
-                  : materialNeedIcon
-              }
-            >
-              <Popup ref={popupRef}>
-                <Task
-                  requestId={id}
-                  user={user}
-                  history={history}
-                  request_type={request_type}
-                  title={title}
-                  completed={helper_fulfilled === helper_quantity}
-                  description={description}
-                  created_date={created_date}
-                  handlePopupClose={handlePopupClose}
-                  updateFulfillmentData={updateFulfillmentData}
-                  handleVolunteerClick={handleVolunteerClick}
-                />
-              </Popup>
-            </Marker>
-          );
-        }
+        return (
+          <Marker
+            key={id}
+            position={[latitude, longitude]}
+            icon={
+              request_type === "One-time task"
+                ? oneTimeTaskIcon
+                : materialNeedIcon
+            }
+          >
+            <Popup ref={popupRef}>
+              <Task
+                requestId={id}
+                user={user}
+                history={history}
+                request_type={request_type}
+                title={title}
+                completed={helper_fulfilled === helper_quantity}
+                description={description}
+                created_date={created_date}
+                handlePopupClose={handlePopupClose}
+                handleVolunteerClick={handleVolunteerClick}
+                addFulfillmentData={addFulfillmentData}
+                shouldDisable={(user.id === owner.id).toString()}
+              />
+            </Popup>
+          </Marker>
+        );
       }
     );
-    console.log("request marker", requestMarkers);
-    return requestMarkers;
+  };
+
+  const getUserLocation = () => {
+    const success = (pos) => {
+      return {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+      };
+    };
+
+    const error = (err) => {
+      console.warn(`ERROR(${err.code}): ${err.message}`);
+    };
+
+    navigator.geolocation.getCurrentPosition(success, error);
   };
 
   const handleVolunteerClick = () => {
@@ -161,10 +168,10 @@ const Requests = ({
   };
 
   useEffect(() => {
-    // console.log(process.env.REACT_APP_GOOGLE_API_KEY);
-    // getUserLocation().then((location) => {
+    // getUserLocation().then(({ lat, lng }) => {
     //   setViewport({
-    //     location,
+    //     latitude: lat,
+    //     longitude: lng,
     //     haveUsersLocation: true,
     //   });
     // });
@@ -201,7 +208,7 @@ const Requests = ({
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        {requestData && addRequestMarkers()}
+        {requestData && renderRequestMarkers()}
       </Map>
       <Modal
         show={show}
@@ -212,7 +219,7 @@ const Requests = ({
         <Modal.Body>
           <AddRequestForm
             userId={user.id}
-            updateRequestData={updateRequestData}
+            addRequestData={addRequestData}
             markerLatLng={markerLatLng}
             markerAddress={markerAddress}
             handleCloseForm={handleCloseForm}

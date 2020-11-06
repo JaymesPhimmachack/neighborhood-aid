@@ -3,15 +3,6 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
-import styled from "styled-components";
-
-// const StyleLocationSearchInput = styled.div`
-// .location-search-input {
-// 	width: 100%;
-// 	margin-top: 0;
-//   margin-left: 0;
-// }
-// `;
 
 const LocationSearchInput = ({ setUserInput, userAddress }) => {
   const [address, setAddress] = useState(userAddress);

@@ -12,18 +12,18 @@ class RegistrationsController < ApplicationController
 	end	
 
 	def update
-		@user = User.find(params[:id])
+		user = User.find(params[:id])
 
-		if @user.update(registration_params)
-			render json: @user, status: 202
+		if user.update(registration_params)
+			render json: user, status: 202, message: 'User updated'
 		else
 			render json: { status: 422 }
 		end	
 	end	
 
 	def destroy
-		# @user = User.find(params[:id])
-		@current_user.destroy
+		user = User.find(params[:id])
+		user.destroy
 		render json: { status: :no_content }
 	end	
 

@@ -11,7 +11,6 @@ const StyleMessage = styled.div`
 `;
 
 export const Message = ({ messages, user }) => {
-  console.log(messages);
   return messages.map((message) => {
     return (
       <StyleMessage

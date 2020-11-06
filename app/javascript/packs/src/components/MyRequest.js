@@ -8,7 +8,13 @@ const StyleMyRequest = styled.div`
   grid-gap: 10px;
 `;
 
-const MyRequest = ({ user, history, requestData }) => {
+const MyRequest = ({
+  user,
+  history,
+  requestData,
+  updateRequestData,
+  deleteRequestData,
+}) => {
   const filteredRequest = () => {
     return requestData.filter((request) => {
       if (request.owner.id === user.id) {
@@ -18,7 +24,7 @@ const MyRequest = ({ user, history, requestData }) => {
   };
   const renderRequests = () => {
     const requests = filteredRequest();
-    console.log(requests);
+
     if (requests.length > 0) {
       return requests.map(
         ({
@@ -29,7 +35,7 @@ const MyRequest = ({ user, history, requestData }) => {
           helper_quantity,
           helper_fulfilled,
           created_date,
-          disable_republish,
+          render_state,
         }) => {
           return (
             <Task
@@ -42,7 +48,9 @@ const MyRequest = ({ user, history, requestData }) => {
               completed={helper_fulfilled === helper_quantity}
               description={description}
               created_date={created_date}
-              disable_republish={disable_republish}
+              render_state={render_state}
+              updateRequestData={updateRequestData}
+              deleteRequestData={deleteRequestData}
             />
           );
         }
@@ -53,7 +61,9 @@ const MyRequest = ({ user, history, requestData }) => {
   };
 
   return (
-    <div className='container mt-5'>{requestData && renderRequests()}</div>
+    <StyleMyRequest className='container mt-5'>
+      {requestData && renderRequests()}
+    </StyleMyRequest>
   );
 };
 

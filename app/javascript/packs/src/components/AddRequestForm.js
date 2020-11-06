@@ -45,7 +45,7 @@ const Styles = styled.div`
 
 const AddRequestForm = ({
   userId,
-  updateRequestData,
+  addRequestData,
   markerLatLng,
   markerAddress,
   handleCloseForm,
@@ -109,7 +109,9 @@ const AddRequestForm = ({
         helper_quantity: "",
       });
       handleCloseForm();
-      console.log(data);
+      if (data) {
+        addRequestData(data);
+      }
     } catch (error) {
       console.log("add request error", error);
     }
@@ -121,8 +123,6 @@ const AddRequestForm = ({
       longitude: markerLatLng.lng,
       address: markerAddress,
     });
-    console.log(typeof markerAddress);
-    console.log(userInput, markerLatLng, markerAddress);
   }, [markerLatLng, markerAddress]);
 
   return (

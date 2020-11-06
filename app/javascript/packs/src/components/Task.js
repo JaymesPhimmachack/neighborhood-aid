@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { Card, Form, Button } from "react-bootstrap";
 import axios from "axios";
 
@@ -14,19 +13,22 @@ const Task = ({
   created_date,
   handlePopupClose,
   task_fulfilled,
-  updateFulfillmentData,
-  handleVolunteerClick,
   fulfillmentId,
-  disable_republish,
+  hide_item,
+  handleVolunteerClick,
+  addFulfillmentData,
+  updateFulfillmentData,
+  deleteFulfillmentData,
+  updateRequestData,
+  deleteRequestData,
+  shouldDisable,
 }) => {
-  const [disable, setDisable] = useState(false);
-
   const handleRepublish = async () => {
     try {
       const { data } = await axios.patch(
         `http://localhost:3000/requests/${requestId}`
       );
-      console.log(data);
+      updateRequestData(data);
     } catch (error) {
       console.log("report error", error);
     }
@@ -38,9 +40,7 @@ const Task = ({
         `http://localhost:3000/requests/${requestId}`
       );
 
-      if (data.status === "no_content") {
-        console.log(data);
-      }
+      deleteRequestData(requestId);
     } catch (error) {
       console.log("task completed error", error);
     }
@@ -52,16 +52,13 @@ const Task = ({
         `http://localhost:3000/fulfillments/${fulfillmentId}`
       );
 
-      // update state after delete
-      // if (data.status === "no_content") {
-      //   handleFulfillmentDelete(fulfillmentId);
-      // }
+      deleteFulfillmentData(fulfillmentId, requestId);
     } catch (error) {
       console.log("delete error", error);
     }
   };
 
-  const handleFulfilled = async () => {
+  const handleFulfillmentUpdate = async () => {
     try {
       const { data } = await axios.patch(
         `http://localhost:3000/fulfillments/${fulfillmentId}`,
@@ -71,12 +68,8 @@ const Task = ({
           task_fulfilled: true,
         }
       );
-      console.log(data);
-      // get data back and update state and disable delete button
-      // if (data.status === 202) {
-      //   setDisable(true);
-      //   updateFulfillmentData(data);
-      // }
+
+      updateFulfillmentData(fulfillmentId);
     } catch (error) {
       console.log("fulfillment error", error);
     }
@@ -88,33 +81,31 @@ const Task = ({
         request_id: requestId,
         volunteer_id: user.id,
       });
-      console.log(data);
-      // if (data.status === 201) {
-      // updateFulfillmentData(data);
-      // handleVolunteerClick();
-      // }
+
+      if (data) {
+        addFulfillmentData(data);
+        handleVolunteerClick();
+      }
     } catch (error) {
       console.log("volunteer error", error);
     }
   };
 
   const renderButtons = () => {
-    console.log("history data", history);
     if (history.location.pathname === "/pages/my-request") {
       return (
         <div className='d-flex justify-content-around'>
           <Button
             variant='danger'
             onClick={handleRequestDelete}
-            disabled={task_fulfilled}
-            disabled={completed}
+            disabled={completed || task_fulfilled}
           >
             Delete
           </Button>
           <Button
             variant='secondary'
             onClick={handleRepublish}
-            disabled={completed || disable_republish}
+            disabled={completed || hide_item}
           >
             Republish
           </Button>
@@ -132,7 +123,7 @@ const Task = ({
           </Button>
           <Button
             variant='primary'
-            onClick={handleFulfilled}
+            onClick={handleFulfillmentUpdate}
             disabled={task_fulfilled}
           >
             Fulfilled
@@ -145,7 +136,11 @@ const Task = ({
           <Button variant='secondary' onClick={handlePopupClose}>
             Cancel
           </Button>
-          <Button variant='primary' onClick={handleVolunteer}>
+          <Button
+            variant='primary'
+            onClick={handleVolunteer}
+            disable={shouldDisable}
+          >
             Volunteer
           </Button>
         </div>

@@ -79,7 +79,7 @@ const Chat = ({ user }) => {
     if (roomId) {
       getRoomData();
     }
-    console.log(chatRooms);
+
     return () => setIsMounted(false);
   }, [roomId]);
 

@@ -48,6 +48,7 @@ const StyleChatRoom = styled.div`
 const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
   const [userMessage, setUserMessage] = useState("");
   const [isMounted, setIsMounted] = useState(false);
+  const [chatDisconnected, setChatDisconnected] = useState(true);
 
   const handleChange = (event) => {
     setUserMessage(event.target.value);
@@ -75,13 +76,18 @@ const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
         id: id,
       },
       {
-        connected: () => console.log("connected"),
-        disconnected: () => console.log("disconnected"),
+        connected: () => {
+          console.log("connected");
+          setChatDisconnected(false);
+        },
+        disconnected: () => {
+          setChatDisconnected(true);
+          console.log("disconnected");
+        },
         received: ({ message }) => {
-          console.log("testing receiving message", message);
           setRoomMessages((currentState) => [...currentState, message]);
-          // var elem = document.getElementById("message");
-          // elem.scrollTop = elem.scrollHeight;
+          var elem = document.getElementById("message");
+          elem.scrollTop = elem.scrollHeight;
         },
       }
     );
@@ -92,27 +98,33 @@ const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
     <StyleChatRoom className='col-9'>
       <div className='row justify-content-around'>
         <div className='col-9'>
-          <div className='message-group'>
+          <div className='message-group' id='message'>
             {isMounted && <Message messages={roomMessages} user={user} />}
           </div>
           <div className='message-form'>
-            <Form onSubmit={handleSubmit}>
-              <Form.Label htmlFor='message' srOnly>
-                Message
-              </Form.Label>
-              <Form.Control
-                type='text'
-                id='message'
-                placeholder='Type your message...'
-                className='d-inline-block mr-2 w-75'
-                value={userMessage}
-                onChange={handleChange}
-              />
+            {isMounted && (
+              <Form onSubmit={handleSubmit}>
+                <Form.Label htmlFor='message' srOnly>
+                  Message
+                </Form.Label>
+                <Form.Control
+                  type='text'
+                  id='message'
+                  placeholder='Type your message...'
+                  className='d-inline-block mr-2 w-75'
+                  value={userMessage}
+                  onChange={handleChange}
+                />
 
-              <Button type='submit' className='mb-2'>
-                <IoMdSend />
-              </Button>
-            </Form>
+                <Button
+                  type='submit'
+                  className='mb-2'
+                  disabled={chatDisconnected}
+                >
+                  <IoMdSend />
+                </Button>
+              </Form>
+            )}
           </div>
         </div>
         <div className='col-3'>

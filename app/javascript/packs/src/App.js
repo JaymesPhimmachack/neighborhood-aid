@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./components/Home";
-import Login from "./components/auth/Login";
-import Registration from "./components/auth/Registration";
 import Requests from "./components/Requests";
-import AddRequestForm from "./components/AddRequestForm";
 import MyRequest from "./components/MyRequest";
 import MyVolunteerWork from "./components/MyVolunteerWork";
 import Chat from "./components/Chat";
@@ -65,42 +62,132 @@ const App = () => {
     setUser({});
   };
 
+  // Request functions
   const getRequestData = async () => {
     try {
       const { data } = await axios.get("http://localhost:3000/requests");
-      console.log("get requests", data);
+
       setRequestData(data);
     } catch (error) {
       console.log("Request Error", error);
     }
   };
 
+  const addRequestData = (newRequestData) => {
+    setRequestData([...requestData, newRequestData]);
+  };
+
+  const updateRequestData = (newRequestData) => {
+    const filteredRequest = requestData.filter(
+      (request) => request.id !== newRequestData.id
+    );
+
+    setRequestData([...filteredRequest, newRequestData]);
+  };
+
+  const deleteRequestData = (id) => {
+    const newRequest = requestData.filter((request) => request.id !== id);
+
+    setRequestData(newRequest);
+  };
+
+  // Fulfillment functions
   const getFulfillmentData = async () => {
     try {
       const { data } = await axios.get("http://localhost:3000/fulfillments");
-      console.log("get fulfillments", data);
+
       setFulfillmentData(data);
     } catch (error) {
       console.log("current room error", error);
     }
   };
 
-  const updateRequestData = (newRequestData) => {
-    setRequestData([...requestData, ...newRequestData]);
+  const addFulfillmentData = (newFulfillmentData) => {
+    setFulfillmentData([...fulfillmentData, newFulfillmentData]);
+
+    // Look for request to update
+    const foundRequest = requestData.find(
+      (request) => request.id === newFulfillmentData.request_id
+    );
+    // Filter out old request
+    const filteredRequest = requestData.filter(
+      (request) => request.id !== newFulfillmentData.request_id
+    );
+    // Make a copy of the request
+    const requestCopy = Object.assign({}, foundRequest);
+
+    // Make a copy of the fulfillments
+    const newFulfillments = [...foundRequest.fulfillments, newFulfillmentData];
+    // Add new fulfillments to new request
+    requestCopy.fulfillments = newFulfillments;
+    // Update with new request
+    setRequestData([...filteredRequest, requestCopy]);
   };
 
-  const updateFulfillmentData = (newFulfillmentData) => {
-    console.log("new fulfill data", [
-      ...fulfillmentData,
-      ...newFulfillmentData,
-    ]);
-    // setFulfillmentData([...fulfillmentData, ...newFulfillmentData]);
+  const updateFulfillmentData = (fulfillmentId) => {
+    const foundFulfillment = fulfillmentData.find(
+      (fulfillment) => fulfillment.id === fulfillmentId
+    );
+
+    const newFulfillment = { ...foundFulfillment, task_fulfilled: true };
+
+    // Filter out old fulfillment
+    const filteredFulfillments = fulfillmentData.filter(
+      (fulfillment) => fulfillment.id !== fulfillmentId
+    );
+
+    // Look for request to update
+    const foundRequest = requestData.find(
+      (request) => request.id === newFulfillment.request_id
+    );
+    // Make a copy of the request
+    const requestCopy = Object.assign({}, foundRequest);
+
+    // Filter out old request
+    const filteredRequest = requestData.filter(
+      (request) => request.id !== newFulfillment.request_id
+    );
+
+    // Make a copy of the fulfillment
+    const newFulfillments = [...filteredFulfillments, newFulfillment];
+
+    // Add new fulfillments to new request
+    requestCopy.fulfillments = newFulfillments;
+    // Update with new request and new fulfillment
+    setRequestData([...filteredRequest, requestCopy]);
+    setFulfillmentData([...filteredFulfillments, newFulfillment]);
   };
 
-  const handleFulfillmentDelete = (id) => {
-    console.log(fulfillmentData);
-    // fulfillments = fulfillmentData.filter()
-    // setFulfillmentData(fulfillments);
+  const deleteFulfillmentData = (fulfillmentId, requestId) => {
+    const newFulfillment = fulfillmentData.filter(
+      (fulfillment) => fulfillment.id !== fulfillmentId
+    );
+
+    // Look for request to update
+    const foundRequest = requestData.find(
+      (request) => request.id === requestId
+    );
+
+    // Make a copy of the request
+    const requestCopy = Object.assign({}, foundRequest);
+
+    // Look for fulfillment to update
+    const filteredRequestFulfillment = foundRequest.fulfillments.filter(
+      (fulfillment) => fulfillment.id !== fulfillmentId
+    );
+
+    requestCopy.fulfillments = filteredRequestFulfillment;
+
+    // Filter out old request
+    const filteredRequest = requestData.filter(
+      (request) => request.id !== requestId
+    );
+
+    // Update with new request
+    setRequestData([...filteredRequest, requestCopy]);
+
+    // Update fulfillment
+    setFulfillmentData(newFulfillment);
   };
 
   useEffect(() => {
@@ -140,15 +227,22 @@ const App = () => {
                 {...props}
                 user={user}
                 requestData={requestData}
-                updateRequestData={updateRequestData}
-                updateFulfillmentData={updateFulfillmentData}
+                addRequestData={addRequestData}
+                addFulfillmentData={addFulfillmentData}
               />
             )}
           />
           <Route
             path='/pages/my-request'
             render={(props) => (
-              <MyRequest {...props} user={user} requestData={requestData} />
+              <MyRequest
+                {...props}
+                user={user}
+                requestData={requestData}
+                updateRequestData={updateRequestData}
+                deleteRequestData={deleteRequestData}
+                fulfillmentData={fulfillmentData}
+              />
             )}
           />
           <Route
@@ -158,9 +252,9 @@ const App = () => {
                 {...props}
                 user={user}
                 requestData={requestData}
-                task_fulfilled={fulfillmentData.task_fulfilled}
                 fulfillmentData={fulfillmentData}
-                handleFulfillmentDelete={handleFulfillmentDelete}
+                updateFulfillmentData={updateFulfillmentData}
+                deleteFulfillmentData={deleteFulfillmentData}
               />
             )}
           />

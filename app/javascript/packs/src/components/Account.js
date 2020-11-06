@@ -20,6 +20,7 @@ const Account = ({ history, user, updateUser, deleteUser }) => {
       email: "",
       password: "",
       password_confirmation: "",
+      photo: "",
     }
   );
 
@@ -32,7 +33,7 @@ const Account = ({ history, user, updateUser, deleteUser }) => {
     });
   }, []);
 
-  const [photo, setPhoto] = useState("");
+  const [updateMessage, setupdateMessage] = useState("");
 
   const handleChange = (evt) => {
     const name = evt.target.name;
@@ -68,14 +69,15 @@ const Account = ({ history, user, updateUser, deleteUser }) => {
         },
         { withCredentials: true }
       );
-      console.log(data);
-      if (data.status === 202) {
+
+      if (data) {
         updateUser(data);
 
         setUserInput({
           password: "",
           password_confirmation: "",
         });
+        setupdateMessage(data.message);
       }
     } catch (error) {
       console.log("registration error", error);
@@ -97,10 +99,27 @@ const Account = ({ history, user, updateUser, deleteUser }) => {
   };
 
   return (
-    <StyledAccount>
-      <Avatar photoUrl={user.photo_url} />
-
-      <Form onSubmit={handleSubmit}>
+    <StyledAccount className='mt-5'>
+      <div className='text-center'>
+        <Avatar photoUrl={user.photo_url} className='rounded-circle' />
+      </div>
+      <Form onSubmit={handleSubmit} className='mt-4'>
+        {updateMessage ? (
+          <div
+            class='alert alert-success alert-dismissible fade show'
+            role='alert'
+          >
+            {updateMessage}
+            <button
+              type='button'
+              class='close'
+              data-dismiss='alert'
+              aria-label='Close'
+            >
+              <span aria-hidden='true'>&times;</span>
+            </button>
+          </div>
+        ) : null}
         <Form.Group>
           <Form.Label>First name</Form.Label>
           <Form.Control
@@ -146,15 +165,6 @@ const Account = ({ history, user, updateUser, deleteUser }) => {
             value={userInput.password_confirmation}
             onChange={handleChange}
             required
-          />
-        </Form.Group>
-        <Form.Group>
-          <ImageUploader
-            withIcon={false}
-            buttonText='Choose images'
-            onChange={onDrop}
-            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-            maxFileSize={5242880}
           />
         </Form.Group>
         <div className='d-flex justify-content-around'>

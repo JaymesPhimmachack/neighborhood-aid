@@ -31,13 +31,13 @@ users.each do |user|
 end
 
 requests = Request.create([
-	{owner_id: 1, title: "Heavy furniture help", request_type: "One-time task", description: "I need help carrying a piece of heavy furniture.", address: "3190 Bicetown Road New York, New York City, NY 10007", latitude: 40.713050, longitude: -74.007230, helper_quantity: 3
+	{owner_id: 1, title: "Heavy furniture help", request_type: "One-time task", description: "I need help carrying a piece of heavy furniture.", address: "3190 Bicetown Road New York, New York City, NY 10007", latitude: 40.713051, longitude: -74.007233, helper_quantity: 3
 	},
-	{owner_id: 2, title: "Lawn mower broken", request_type: "One-time task", description: "I need help repairing my lawn mower.", address: "60 Huck Rd, Bloomfield, NJ 07003", latitude: 40.622570, longitude: -74.351230, helper_quantity: 3
+	{owner_id: 2, title: "Lawn mower broken", request_type: "One-time task", description: "I need help repairing my lawn mower.", address: "60 Huck Rd, Bloomfield, NJ 07003", latitude: 40.824871, longitude: -74.184639, helper_quantity: 3
 	},
 	{owner_id: 3, title: "Dog walker needed", request_type: "One-time task", description: "I need someone to walk my dog.", address: "1934 Raritan Rd, Scotch Plains, NJ 07076", latitude: 40.622570, longitude: -74.351227, helper_quantity: 3
 	},
-	{owner_id: 4, title: "No more toiler paper", request_type: "Material need", description: "I need some toiler paper. Because of covid 19 I ran out and no store have some in stock.", address: "107-34 121st St, Queens, NY 11419", latitude: 40.688550, longitude: -73.822940, helper_quantity: 3
+	{owner_id: 4, title: "No more toiler paper", request_type: "Material need", description: "I need some toiler paper. Because of covid 19 I ran out and no store have some in stock.", address: "107-34 121st St, Queens, NY 11419", latitude: 40.688549, longitude: -73.822937, helper_quantity: 3
 	}
 	])
 
