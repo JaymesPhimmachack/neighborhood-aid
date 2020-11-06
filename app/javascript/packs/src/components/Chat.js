@@ -38,7 +38,7 @@ const StyleChat = styled.div`
   }
 `;
 
-const Chat = ({ user }) => {
+const Chat = ({ user, loggedInStatus, history }) => {
   const [chatRooms, setChatRooms] = useState([]);
   const [roomId, setRoomId] = useState("");
   const [members, setMembers] = useState(null);
@@ -70,7 +70,9 @@ const Chat = ({ user }) => {
   };
 
   useEffect(() => {
-    setIsMounted(true);
+    if (loggedInStatus === "NOT_LOGGED_IN") {
+      history.push("/");
+    }
 
     if (chatRooms.length === 0) {
       getChatRooms();
@@ -79,9 +81,10 @@ const Chat = ({ user }) => {
     if (roomId) {
       getRoomData();
     }
+    setIsMounted(true);
 
     return () => setIsMounted(false);
-  }, [roomId]);
+  }, [roomId, loggedInStatus]);
 
   const handleRoomChange = ({ target }) => {
     setRoomId(target.dataset.id);

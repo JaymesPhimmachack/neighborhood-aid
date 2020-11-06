@@ -17,6 +17,7 @@ const Account = ({
   setLoggedInStatus,
   setUser,
   deleteUserData,
+  loggedInStatus,
 }) => {
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
@@ -32,13 +33,16 @@ const Account = ({
   );
 
   useEffect(() => {
+    if (loggedInStatus === "NOT_LOGGED_IN") {
+      history.push("/");
+    }
     setUserInput({
       id: user.id,
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email,
     });
-  }, []);
+  }, [loggedInStatus]);
 
   const [updateMessage, setupdateMessage] = useState("");
 

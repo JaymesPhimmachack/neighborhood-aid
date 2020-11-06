@@ -14,7 +14,14 @@ const MyRequest = ({
   requestData,
   updateRequestData,
   deleteRequestData,
+  loggedInStatus,
 }) => {
+  useEffect(() => {
+    if (loggedInStatus === "NOT_LOGGED_IN") {
+      history.push("/");
+    }
+  }, [loggedInStatus]);
+
   const filteredRequest = () => {
     return requestData.filter((request) => {
       if (request.owner.id === user.id) {

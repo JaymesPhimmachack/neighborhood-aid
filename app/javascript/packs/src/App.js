@@ -16,6 +16,10 @@ const App = () => {
   const [showBtnClick, setBtnClick] = useState("signin");
   const [requestData, setRequestData] = useState(null);
   const [fulfillmentData, setFulfillmentData] = useState(null);
+  const [location, setLocation] = useState({
+    latitude: 40.774,
+    longitude: -74.125,
+  });
 
   const handleClose = () => {
     setShow(false);
@@ -42,10 +46,10 @@ const App = () => {
         withCredentials: true,
       });
 
-      if (data.logged_in && this.state.loggedInStatus === "NOT_LOGGED_IN") {
+      if (data.logged_in && loggedInStatus === "NOT_LOGGED_IN") {
         setLoggedInStatus("LOGGED_IN");
         setUser(data);
-      } else if (!data.logged_in && this.state.loggedInStatus === "LOGGED_IN") {
+      } else if (!data.logged_in && loggedInStatus === "LOGGED_IN") {
         setLoggedInStatus("NOT_LOGGED_IN");
         setUser({});
       }
@@ -205,10 +209,41 @@ const App = () => {
     setFulfillmentData(newFulfillment);
   };
 
+  const getUserLocation = () => {
+    if ("geolocation" in navigator) {
+      // check if geolocation is supported/enabled on current browser
+      navigator.geolocation.getCurrentPosition(
+        function success(position) {
+          // for when getting location is a success
+          console.log(
+            "latitude",
+            position.coords.latitude,
+            "longitude",
+            position.coords.longitude
+          );
+
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        function error(err) {
+          // for when getting location results in an error
+          console.warn(`ERROR(${err.code}): ${err.message}`);
+        }
+      );
+    } else {
+      // geolocation is not supported
+      // get your location some other way
+      console.log("geolocation is not enabled on this browser");
+    }
+  };
+
   useEffect(() => {
-    // checkLoginStatus();
+    checkLoginStatus();
     getRequestData();
     getFulfillmentData();
+    getUserLocation();
   }, []);
 
   return (
@@ -245,6 +280,8 @@ const App = () => {
                 requestData={requestData}
                 addRequestData={addRequestData}
                 addFulfillmentData={addFulfillmentData}
+                loggedInStatus={loggedInStatus}
+                location={location}
               />
             )}
           />
@@ -258,6 +295,7 @@ const App = () => {
                 updateRequestData={updateRequestData}
                 deleteRequestData={deleteRequestData}
                 fulfillmentData={fulfillmentData}
+                loggedInStatus={loggedInStatus}
               />
             )}
           />
@@ -271,12 +309,15 @@ const App = () => {
                 fulfillmentData={fulfillmentData}
                 updateFulfillmentData={updateFulfillmentData}
                 deleteFulfillmentData={deleteFulfillmentData}
+                loggedInStatus={loggedInStatus}
               />
             )}
           />
           <Route
             path='/pages/chat'
-            render={(props) => <Chat {...props} user={user} />}
+            render={(props) => (
+              <Chat {...props} user={user} loggedInStatus={loggedInStatus} />
+            )}
           />
           <Route
             path='/pages/account'
@@ -289,6 +330,7 @@ const App = () => {
                 setLoggedInStatus={setLoggedInStatus}
                 setUser={setUser}
                 deleteUserData={deleteUserData}
+                loggedInStatus={loggedInStatus}
               />
             )}
           />

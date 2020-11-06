@@ -29,13 +29,15 @@ const Requests = ({
   requestData,
   addRequestData,
   addFulfillmentData,
+  loggedInStatus,
+  location,
 }) => {
   const [show, setShow] = useState(false);
   const [bounds, setBounds] = useState("");
   const [markerLatLng, setMarkerLatLng] = useState({});
   const [markerAddress, setMarkerAddress] = useState();
+
   const [viewport, setViewport] = useState({
-    haveUsersLocation: false,
     latitude: 40.774,
     longitude: -74.125,
     width: "100%",
@@ -44,6 +46,7 @@ const Requests = ({
     gotPosition: false,
   });
   const [requestCount, setRequestCount] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
   const mapRef = useRef(null);
   const popupRef = useRef();
 
@@ -125,7 +128,6 @@ const Requests = ({
         helper_fulfilled,
         created_date,
         owner,
-        fulfillments,
       }) => {
         return (
           <Marker
@@ -159,41 +161,15 @@ const Requests = ({
     );
   };
 
-  const getUserLocation = () => {
-    const success = (pos) => {
-      return {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude,
-      };
-    };
-
-    const error = (err) => {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
-    };
-
-    navigator.geolocation.getCurrentPosition(success, error);
-  };
-
   const handleVolunteerClick = () => {
     history.push("/pages/chat");
   };
 
   useEffect(() => {
-    // getUserLocation().then(({ lat, lng }) => {
-    //   setViewport({
-    //     latitude: lat,
-    //     longitude: lng,
-    //     haveUsersLocation: true,
-    //   });
-    // });
-    // after getting user position list requests
-    // {viewport.gotPosition ? addRequest() : null}
-    // const southWest = mapRef.current.leafletElement.getBounds()._southWest;
-    // const northEast = mapRef.current.leafletElement.getBounds()._northEast;
-    // southWest = { lat: southWest.lat - 5, lng: southWest.lng - 5 };
-    // northEast = { lat: northEast.lat + 5, lng: northEast.lng + 5 };
-    // const mapBounds = L.latLngBounds(southWest, northEast);
-    // setBounds(mapBounds);
+    if (loggedInStatus === "NOT_LOGGED_IN") {
+      history.push("/");
+    }
+    setIsMounted(true);
 
     let getRequestCountInterval = setInterval(() => {
       getRequestCount();
@@ -201,55 +177,59 @@ const Requests = ({
     return () => {
       clearInterval(getRequestCountInterval);
     };
-  }, []);
+  }, [loggedInStatus]);
 
   return (
     <div className='container py-5'>
-      <Map
-        ref={mapRef}
-        center={[viewport.latitude, viewport.longitude]}
-        zoom={viewport.zoom}
-        style={{ height: viewport.height, width: viewport.width }}
-        onMouseUp={getMarkerLocation}
-        onContextMenu={handleContextMenu}
-        onClick={handleClick}
-        maxBounds={bounds}
-      >
-        <TileLayer
-          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        />
-        {requestData && renderRequestMarkers()}
-      </Map>
-      <Modal
-        show={show}
-        onHide={handleCloseForm}
-        backdrop='static'
-        keyboard={false}
-      >
-        <Modal.Body>
-          <AddRequestForm
-            userId={user.id}
-            addRequestData={addRequestData}
-            markerLatLng={markerLatLng}
-            markerAddress={markerAddress}
-            handleCloseForm={handleCloseForm}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={handleCloseForm}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <div>
-        <div className='my-3'>Open Requests: {requestCount}</div>
-        <div>
-          <Button variant='secondary' onClick={handleShowForm}>
-            Add Request
-          </Button>
-        </div>
-      </div>
+      {isMounted ? (
+        <React.Fragment>
+          <Map
+            ref={mapRef}
+            center={[location.latitude, location.longitude]}
+            zoom={11}
+            style={{ height: "700px", width: "100%" }}
+            onMouseUp={getMarkerLocation}
+            onContextMenu={handleContextMenu}
+            onClick={handleClick}
+            maxBounds={bounds}
+          >
+            <TileLayer
+              url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            />
+            {requestData && renderRequestMarkers()}
+          </Map>
+          <Modal
+            show={show}
+            onHide={handleCloseForm}
+            backdrop='static'
+            keyboard={false}
+          >
+            <Modal.Body>
+              <AddRequestForm
+                userId={user.id}
+                addRequestData={addRequestData}
+                markerLatLng={markerLatLng}
+                markerAddress={markerAddress}
+                handleCloseForm={handleCloseForm}
+              />
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant='secondary' onClick={handleCloseForm}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <div>
+            <div className='my-3'>Open Requests: {requestCount}</div>
+            <div>
+              <Button variant='secondary' onClick={handleShowForm}>
+                Add Request
+              </Button>
+            </div>
+          </div>
+        </React.Fragment>
+      ) : null}
     </div>
   );
 };

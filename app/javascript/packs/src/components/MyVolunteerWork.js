@@ -15,7 +15,14 @@ const MyVolunteerWork = ({
   fulfillmentData,
   updateFulfillmentData,
   deleteFulfillmentData,
+  loggedInStatus,
 }) => {
+  useEffect(() => {
+    if (loggedInStatus === "NOT_LOGGED_IN") {
+      history.push("/");
+    }
+  }, [loggedInStatus]);
+
   const filteredRequest = () => {
     return requestData.filter((request) => {
       return request.fulfillments.find(
