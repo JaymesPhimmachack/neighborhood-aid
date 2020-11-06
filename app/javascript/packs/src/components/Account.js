@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useReducer } from "react";
 import Avatar from "./Avatar";
-import ImageUploader from "react-images-upload";
 import { Form, Button } from "react-bootstrap";
 import styled from "styled-components";
 import axios from "axios";
@@ -10,7 +9,15 @@ const StyledAccount = styled.div`
   margin: 0 auto;
 `;
 
-const Account = ({ history, user, updateUser, deleteUser }) => {
+const Account = ({
+  history,
+  user,
+  updateUser,
+  deleteUser,
+  setLoggedInStatus,
+  setUser,
+  deleteUserData,
+}) => {
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -90,6 +97,10 @@ const Account = ({ history, user, updateUser, deleteUser }) => {
         `http://localhost:3000/registrations/${user.id}`
       );
       if (data.status === "no_content") {
+        console.log("handleDelete", user);
+        deleteUserData(user.id);
+        setLoggedInStatus("NOT_LOGGED_IN");
+        setUser({});
         deleteUser();
         history.push("/");
       }
@@ -101,7 +112,7 @@ const Account = ({ history, user, updateUser, deleteUser }) => {
   return (
     <StyledAccount className='mt-5'>
       <div className='text-center'>
-        <Avatar photoUrl={user.photo_url} className='rounded-circle' />
+        <Avatar photoUrl={user.photo_url} />
       </div>
       <Form onSubmit={handleSubmit} className='mt-4'>
         {updateMessage ? (

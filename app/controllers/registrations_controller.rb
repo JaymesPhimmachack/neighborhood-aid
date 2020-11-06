@@ -1,5 +1,15 @@
 class RegistrationsController < ApplicationController
 
+	def index
+		users = User.all
+		request_count = 0
+			 users.each do |user|
+				  request_count += user.requests.length
+			 end
+		
+		render json: request_count
+	end	
+
 	def create
 		@user = User.new(registration_params)
 
@@ -24,6 +34,8 @@ class RegistrationsController < ApplicationController
 	def destroy
 		user = User.find(params[:id])
 		user.destroy
+		reset_session
+		
 		render json: { status: :no_content }
 	end	
 

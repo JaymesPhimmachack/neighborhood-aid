@@ -43,6 +43,7 @@ const Requests = ({
     zoom: 11,
     gotPosition: false,
   });
+  const [requestCount, setRequestCount] = useState(0);
   const mapRef = useRef(null);
   const popupRef = useRef();
 
@@ -55,6 +56,16 @@ const Requests = ({
 
   const handlePopupClose = () => {
     popupRef.current.leafletElement.options.leaflet.map.closePopup();
+  };
+
+  const getRequestCount = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/registrations");
+
+      setRequestCount(data);
+    } catch (error) {
+      console.log("get request count error", error);
+    }
   };
 
   const getMarkerLocation = (event) => {
@@ -183,13 +194,13 @@ const Requests = ({
     // northEast = { lat: northEast.lat + 5, lng: northEast.lng + 5 };
     // const mapBounds = L.latLngBounds(southWest, northEast);
     // setBounds(mapBounds);
-    // let getRequestCountInterval = setInterval(() => {
-    // getRequestCount()
-    // loop through user, get request count, and add up users requests
-    // }, 5000);
-    // return () => {
-    //   clearInterval(getRequestCountInterval);
-    // };
+
+    let getRequestCountInterval = setInterval(() => {
+      getRequestCount();
+    }, 5000);
+    return () => {
+      clearInterval(getRequestCountInterval);
+    };
   }, []);
 
   return (
@@ -232,7 +243,7 @@ const Requests = ({
         </Modal.Footer>
       </Modal>
       <div>
-        <div className='my-3'>Open Requests: 8</div>
+        <div className='my-3'>Open Requests: {requestCount}</div>
         <div>
           <Button variant='secondary' onClick={handleShowForm}>
             Add Request

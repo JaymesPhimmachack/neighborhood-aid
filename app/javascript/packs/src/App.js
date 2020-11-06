@@ -66,7 +66,7 @@ const App = () => {
   const getRequestData = async () => {
     try {
       const { data } = await axios.get("http://localhost:3000/requests");
-
+      console.log(data);
       setRequestData(data);
     } catch (error) {
       console.log("Request Error", error);
@@ -89,13 +89,15 @@ const App = () => {
     const newRequest = requestData.filter((request) => request.id !== id);
 
     setRequestData(newRequest);
+
+    setUserDelete(true);
   };
 
   // Fulfillment functions
   const getFulfillmentData = async () => {
     try {
       const { data } = await axios.get("http://localhost:3000/fulfillments");
-
+      console.log(data);
       setFulfillmentData(data);
     } catch (error) {
       console.log("current room error", error);
@@ -190,6 +192,19 @@ const App = () => {
     setFulfillmentData(newFulfillment);
   };
 
+  const deleteUserData = (userId) => {
+    const newRequest = requestData.filter((request) => request.id !== userId);
+
+    setRequestData(newRequest);
+
+    const newFulfillment = fulfillmentData.filter(
+      (fulfillment) => fulfillment.id !== userId
+    );
+
+    // Update fulfillment
+    setFulfillmentData(newFulfillment);
+  };
+
   useEffect(() => {
     // checkLoginStatus();
     getRequestData();
@@ -203,6 +218,7 @@ const App = () => {
           handleLogout={handleLogout}
           handleShow={handleShow}
           name={user.first_name}
+          loggedInStatus={loggedInStatus}
         />
         <Switch>
           <Route
@@ -270,6 +286,9 @@ const App = () => {
                 user={user}
                 updateUser={updateUser}
                 deleteUser={deleteUser}
+                setLoggedInStatus={setLoggedInStatus}
+                setUser={setUser}
+                deleteUserData={deleteUserData}
               />
             )}
           />

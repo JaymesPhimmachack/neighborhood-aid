@@ -19,14 +19,24 @@ const StyledHome = styled.div`
   h1 {
     text-transform: uppercase;
     font-weight: 700;
-    font-size: 64px;
+    font-size: 54px;
+    color: #f4f1de;
+    text-shadow: 5px 5px 8px #737373;
   }
   .btn-style {
     width: 150px;
     height: 50px;
+    background-color: #2a9d8f;
   }
   .cta {
     margin-top: 170px;
+  }
+  h3,
+  p {
+    color: #f4f1de;
+    text-shadow: 5px 5px 8px #737373;
+  }
+  p {
   }
 `;
 
@@ -60,7 +70,6 @@ const Home = ({
             >
               Sign Up
             </Button>
-            <h4>{loggedInStatus}</h4>
           </div>
         </div>
       </Container>

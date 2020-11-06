@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get 'pages/*path' => 'pages#index'
 
   resources :sessions, only: [:create]
-  resources :registrations, only: [:create, :update, :destroy]
+  resources :registrations, only: [:index, :create, :update, :destroy]
   resources :requests, only: [:index, :create, :update, :destroy]
   resources :fulfillments, only: [:index, :update, :create, :destroy]
   resources :messages, only: [:index, :create]
