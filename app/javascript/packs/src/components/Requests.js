@@ -87,11 +87,11 @@ const Requests = ({
       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=<%=Rails.application.credentials.google[:google_map_api_key]%>";
     try {
       const { data } = await axios.get(API_URL);
-      console.log(data);
+
       setMarkerAddress(data.results[0].formatted_address);
       handleShowForm();
     } catch (error) {
-      console.log("get addresss error", error);
+      console.log("get address error", error);
     }
   };
 

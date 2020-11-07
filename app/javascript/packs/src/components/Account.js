@@ -100,7 +100,6 @@ const Account = ({
         `https://jp-neighborhood-aid.herokuapp.com/registrations/${user.id}`
       );
       if (data.status === "no_content") {
-        console.log("handleDelete", user);
         deleteUserData(user.id);
         setLoggedInStatus("NOT_LOGGED_IN");
         setUser({});

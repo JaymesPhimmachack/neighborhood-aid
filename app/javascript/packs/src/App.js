@@ -31,7 +31,6 @@ const App = () => {
 
   const handleLogin = (data) => {
     setLoggedInStatus("LOGGED_IN");
-    console.log("Login data", data);
     setUser(data);
   };
 
@@ -75,10 +74,9 @@ const App = () => {
       const { data } = await axios.get(
         "https://jp-neighborhood-aid.herokuapp.com/requests"
       );
-      console.log(data);
       setRequestData(data);
     } catch (error) {
-      console.log("Request Error", error);
+      console.log("request error", error);
     }
   };
 
@@ -108,7 +106,7 @@ const App = () => {
       const { data } = await axios.get(
         "https://jp-neighborhood-aid.herokuapp.com/fulfillments"
       );
-      console.log(data);
+
       setFulfillmentData(data);
     } catch (error) {
       console.log("current room error", error);
@@ -222,12 +220,6 @@ const App = () => {
       navigator.geolocation.getCurrentPosition(
         function success(position) {
           // for when getting location is a success
-          console.log(
-            "latitude",
-            position.coords.latitude,
-            "longitude",
-            position.coords.longitude
-          );
 
           setLocation({
             latitude: position.coords.latitude,

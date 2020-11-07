@@ -15,7 +15,6 @@ const LocationSearchInput = ({ setUserInput, userAddress }) => {
         setUserInput({ longitude: latLng.lng });
         setAddress(address);
         setUserInput({ address: address });
-        console.log("Success", latLng);
       })
       .catch((error) => console.error("Error", error));
   };
