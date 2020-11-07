@@ -68,7 +68,7 @@ const Account = ({
     } = userInput;
     try {
       const { data } = await axios.patch(
-        `http://localhost:3000/registrations/${user.id}`,
+        `https://jp-neighborhood-aid.herokuapp.com/registrations/${user.id}`,
         {
           first_name,
           last_name,
@@ -97,7 +97,7 @@ const Account = ({
   const handleDelete = async () => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:3000/registrations/${user.id}`
+        `https://jp-neighborhood-aid.herokuapp.com/registrations/${user.id}`
       );
       if (data.status === "no_content") {
         console.log("handleDelete", user);

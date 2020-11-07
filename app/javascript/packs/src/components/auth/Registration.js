@@ -1,6 +1,5 @@
 import React, { useReducer, useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import ImageUploader from "react-images-upload";
 import axios from "axios";
 import styled from "styled-components";
 
@@ -42,8 +41,10 @@ const SignUp = ({ handleSuccessfulAuth }) => {
       formData.append("password_confirmation", password_confirmation);
       formData.append("photo", photo, photo.name);
 
-      const { data } = await axios.post(
-        "http://localhost:3000/registrations",
+      const {
+        data,
+      } = await axios.post(
+        "https://jp-neighborhood-aid.herokuapp.com/registrations",
         formData,
         { withCredentials: true }
       );

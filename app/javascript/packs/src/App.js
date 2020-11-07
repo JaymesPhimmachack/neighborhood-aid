@@ -42,9 +42,12 @@ const App = () => {
 
   const checkLoginStatus = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/logged_in", {
-        withCredentials: true,
-      });
+      const { data } = await axios.get(
+        "https://jp-neighborhood-aid.herokuapp.com/logged_in",
+        {
+          withCredentials: true,
+        }
+      );
 
       if (data.logged_in && loggedInStatus === "NOT_LOGGED_IN") {
         setLoggedInStatus("LOGGED_IN");
@@ -69,7 +72,9 @@ const App = () => {
   // Request functions
   const getRequestData = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/requests");
+      const { data } = await axios.get(
+        "https://jp-neighborhood-aid.herokuapp.com/requests"
+      );
       console.log(data);
       setRequestData(data);
     } catch (error) {
@@ -100,7 +105,9 @@ const App = () => {
   // Fulfillment functions
   const getFulfillmentData = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/fulfillments");
+      const { data } = await axios.get(
+        "https://jp-neighborhood-aid.herokuapp.com/fulfillments"
+      );
       console.log(data);
       setFulfillmentData(data);
     } catch (error) {

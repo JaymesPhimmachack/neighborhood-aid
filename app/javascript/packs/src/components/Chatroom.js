@@ -57,11 +57,14 @@ const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { data } = await axios.post("http://localhost:3000/messages", {
-        creator_id: user.id,
-        request_id: id,
-        body: userMessage,
-      });
+      const { data } = await axios.post(
+        "https://jp-neighborhood-aid.herokuapp.com/messages",
+        {
+          creator_id: user.id,
+          request_id: id,
+          body: userMessage,
+        }
+      );
       setUserMessage("");
     } catch (error) {
       console.log("current room error", error);

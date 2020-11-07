@@ -63,7 +63,9 @@ const Requests = ({
 
   const getRequestCount = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/registrations");
+      const { data } = await axios.get(
+        "https://jp-neighborhood-aid.herokuapp.com/registrations"
+      );
 
       setRequestCount(data);
     } catch (error) {

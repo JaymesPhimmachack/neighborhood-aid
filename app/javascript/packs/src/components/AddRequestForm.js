@@ -84,7 +84,7 @@ const AddRequestForm = ({
 
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/requests",
+        "https://jp-neighborhood-aid.herokuapp.com/requests",
         {
           request: {
             owner_id: userId,

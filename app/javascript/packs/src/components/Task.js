@@ -26,7 +26,7 @@ const Task = ({
   const handleRepublish = async () => {
     try {
       const { data } = await axios.patch(
-        `http://localhost:3000/requests/${requestId}`
+        `https://jp-neighborhood-aid.herokuapp.com/requests/${requestId}`
       );
       updateRequestData(data);
     } catch (error) {
@@ -37,7 +37,7 @@ const Task = ({
   const handleRequestDelete = async () => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:3000/requests/${requestId}`
+        `https://jp-neighborhood-aid.herokuapp.com/requests/${requestId}`
       );
 
       deleteRequestData(requestId);
@@ -49,7 +49,7 @@ const Task = ({
   const handleFulfillmentDelete = async () => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:3000/fulfillments/${fulfillmentId}`
+        `https://jp-neighborhood-aid.herokuapp.com/fulfillments/${fulfillmentId}`
       );
 
       deleteFulfillmentData(fulfillmentId, requestId);
@@ -61,7 +61,7 @@ const Task = ({
   const handleFulfillmentUpdate = async () => {
     try {
       const { data } = await axios.patch(
-        `http://localhost:3000/fulfillments/${fulfillmentId}`,
+        `https://jp-neighborhood-aid.herokuapp.com/fulfillments/${fulfillmentId}`,
         {
           request_id: requestId,
           volunteer_id: user.id,
@@ -77,10 +77,13 @@ const Task = ({
 
   const handleVolunteer = async () => {
     try {
-      const { data } = await axios.post("http://localhost:3000/fulfillments", {
-        request_id: requestId,
-        volunteer_id: user.id,
-      });
+      const { data } = await axios.post(
+        "https://jp-neighborhood-aid.herokuapp.com/fulfillments",
+        {
+          request_id: requestId,
+          volunteer_id: user.id,
+        }
+      );
 
       if (data) {
         addFulfillmentData(data);

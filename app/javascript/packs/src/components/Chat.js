@@ -47,7 +47,9 @@ const Chat = ({ user, loggedInStatus, history }) => {
 
   const getChatRooms = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/rooms");
+      const { data } = await axios.get(
+        "https://jp-neighborhood-aid.herokuapp.com/rooms"
+      );
       if (data) {
         setChatRooms(data);
       }
@@ -58,7 +60,9 @@ const Chat = ({ user, loggedInStatus, history }) => {
 
   const getRoomData = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:3000/rooms/${roomId}`);
+      const { data } = await axios.get(
+        `https://jp-neighborhood-aid.herokuapp.com/rooms/${roomId}`
+      );
 
       if (isMounted) {
         setMembers(data.members);

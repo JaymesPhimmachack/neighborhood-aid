@@ -31,9 +31,12 @@ const Header = ({ handleLogout, handleShow, name, loggedInStatus }) => {
   let history = useHistory();
   const handleLogoutClick = async () => {
     try {
-      const { data } = await axios.delete("http://localhost:3000/logout", {
-        withCredentials: true,
-      });
+      const { data } = await axios.delete(
+        "https://jp-neighborhood-aid.herokuapp.com/logout",
+        {
+          withCredentials: true,
+        }
+      );
 
       if (data.logged_out) {
         handleLogout();
