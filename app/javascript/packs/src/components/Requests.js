@@ -100,7 +100,7 @@ const Requests = ({
 
   const filteredRequest = () => {
     return requestData.filter((request) => {
-      if (request.hide_item) {
+      if (!request.hide_item) {
         return request;
       }
     });
@@ -132,7 +132,7 @@ const Requests = ({
             key={id}
             position={[latitude, longitude]}
             icon={
-              request_type === "One-time task"
+              request_type === "one-time task"
                 ? oneTimeTaskIcon
                 : materialNeedIcon
             }

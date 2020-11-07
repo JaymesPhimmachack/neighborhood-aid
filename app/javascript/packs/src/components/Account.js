@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import Avatar from "./Avatar";
 import { Form, Button } from "react-bootstrap";
 import styled from "styled-components";
@@ -62,6 +62,7 @@ const Account = ({
     try {
       const { data } = await axios.patch(
         `https://jp-neighborhood-aid.herokuapp.com/registrations/${user.id}`,
+
         {
           first_name,
           last_name,

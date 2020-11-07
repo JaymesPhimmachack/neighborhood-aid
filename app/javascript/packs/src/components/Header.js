@@ -33,6 +33,7 @@ const Header = ({ handleLogout, handleShow, name, loggedInStatus }) => {
     try {
       const { data } = await axios.delete(
         "https://jp-neighborhood-aid.herokuapp.com/logout",
+
         {
           withCredentials: true,
         }

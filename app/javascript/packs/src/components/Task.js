@@ -61,6 +61,7 @@ const Task = ({
     try {
       const { data } = await axios.patch(
         `https://jp-neighborhood-aid.herokuapp.com/fulfillments/${fulfillmentId}`,
+
         {
           request_id: requestId,
           volunteer_id: user.id,
@@ -78,6 +79,7 @@ const Task = ({
     try {
       const { data } = await axios.post(
         "https://jp-neighborhood-aid.herokuapp.com/fulfillments",
+
         {
           request_id: requestId,
           volunteer_id: user.id,
@@ -96,7 +98,7 @@ const Task = ({
   const calculateTimeToDisable = () => {
     const dt1 = new Date(created_date);
     const dt2 = new Date();
-    console.log("executed calculate time");
+
     let diff = (dt2.getTime() - dt1.getTime()) / 1000;
     diff /= 60 * 60;
     return Math.abs(Math.round(diff)) >= 24;
@@ -109,14 +111,14 @@ const Task = ({
           <Button
             variant='danger'
             onClick={handleRequestDelete}
-            disabled={!completed || task_fulfilled}
+            disabled={completed || task_fulfilled || calculateTimeToDisable()}
           >
             Delete
           </Button>
           <Button
             variant='secondary'
             onClick={handleRepublish}
-            disabled={!completed || calculateTimeToDisable()}
+            disabled={completed || calculateTimeToDisable()}
           >
             Republish
           </Button>

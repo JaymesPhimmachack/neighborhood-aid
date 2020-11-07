@@ -32,7 +32,6 @@ const App = () => {
   const handleLogin = (data) => {
     setLoggedInStatus("LOGGED_IN");
     setUser(data);
-    console.log("user data", data);
   };
 
   const handleLogout = () => {
@@ -44,6 +43,7 @@ const App = () => {
     try {
       const { data } = await axios.get(
         "https://jp-neighborhood-aid.herokuapp.com/logged_in",
+
         {
           withCredentials: true,
         }
@@ -97,8 +97,6 @@ const App = () => {
     const newRequest = requestData.filter((request) => request.id !== id);
 
     setRequestData(newRequest);
-
-    setUserDelete(true);
   };
 
   // Fulfillment functions

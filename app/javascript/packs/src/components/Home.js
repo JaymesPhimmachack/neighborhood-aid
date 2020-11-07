@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Login from "./auth/Login";
 import Registration from "./auth/Registration";
 import { Modal, Container, Button } from "react-bootstrap";
