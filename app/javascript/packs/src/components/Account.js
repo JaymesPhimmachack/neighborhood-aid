@@ -28,7 +28,6 @@ const Account = ({
       email: "",
       password: "",
       password_confirmation: "",
-      photo: "",
     }
   );
 
@@ -44,16 +43,10 @@ const Account = ({
     });
   }, [loggedInStatus]);
 
-  const [updateMessage, setupdateMessage] = useState("");
-
   const handleChange = (evt) => {
     const name = evt.target.name;
     const newValue = evt.target.value;
     setUserInput({ [name]: newValue });
-  };
-
-  const onDrop = (picture) => {
-    setPhoto(picture);
   };
 
   const handleSubmit = async (event) => {
@@ -87,7 +80,6 @@ const Account = ({
           password: "",
           password_confirmation: "",
         });
-        setupdateMessage(data.message);
       }
     } catch (error) {
       console.log("registration error", error);
@@ -117,22 +109,6 @@ const Account = ({
         <Avatar photoUrl={user.photo_url} />
       </div>
       <Form onSubmit={handleSubmit} className='mt-4'>
-        {updateMessage ? (
-          <div
-            class='alert alert-success alert-dismissible fade show'
-            role='alert'
-          >
-            {updateMessage}
-            <button
-              type='button'
-              class='close'
-              data-dismiss='alert'
-              aria-label='Close'
-            >
-              <span aria-hidden='true'>&times;</span>
-            </button>
-          </div>
-        ) : null}
         <Form.Group>
           <Form.Label>First name</Form.Label>
           <Form.Control

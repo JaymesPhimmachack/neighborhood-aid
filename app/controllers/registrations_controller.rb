@@ -44,5 +44,3 @@ class RegistrationsController < ApplicationController
 			params.permit(:first_name, :last_name, :email, :password, :password_confirmation, :photo)
 		end
 end
-
-

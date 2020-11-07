@@ -12,7 +12,6 @@ const MyVolunteerWork = ({
   user,
   history,
   requestData,
-  fulfillmentData,
   updateFulfillmentData,
   deleteFulfillmentData,
   loggedInStatus,

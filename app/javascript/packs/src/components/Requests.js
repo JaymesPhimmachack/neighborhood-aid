@@ -36,15 +36,6 @@ const Requests = ({
   const [bounds, setBounds] = useState("");
   const [markerLatLng, setMarkerLatLng] = useState({});
   const [markerAddress, setMarkerAddress] = useState();
-
-  const [viewport, setViewport] = useState({
-    latitude: 40.774,
-    longitude: -74.125,
-    width: "100%",
-    height: "700px",
-    zoom: 11,
-    gotPosition: false,
-  });
   const [requestCount, setRequestCount] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const mapRef = useRef(null);
@@ -130,7 +121,12 @@ const Requests = ({
         helper_fulfilled,
         created_date,
         owner,
+        fulfillments,
       }) => {
+        const disableValue = fulfillments.some(
+          (fulfillment) => fulfillment.volunteer_id === user.id
+        );
+
         return (
           <Marker
             key={id}
@@ -154,7 +150,7 @@ const Requests = ({
                 handlePopupClose={handlePopupClose}
                 handleVolunteerClick={handleVolunteerClick}
                 addFulfillmentData={addFulfillmentData}
-                shouldDisable={(user.id === owner.id).toString()}
+                shouldDisable={user.id === owner.id || disableValue}
               />
             </Popup>
           </Marker>

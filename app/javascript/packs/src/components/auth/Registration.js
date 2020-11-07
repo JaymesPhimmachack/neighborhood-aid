@@ -1,11 +1,6 @@
 import React, { useReducer, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
-import styled from "styled-components";
-
-const StyledSignup = styled.div`
-  z-index: 10;
-`;
 
 const SignUp = ({ handleSuccessfulAuth }) => {
   const [userInput, setUserInput] = useReducer(

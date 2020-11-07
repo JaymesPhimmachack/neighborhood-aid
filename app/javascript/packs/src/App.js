@@ -32,6 +32,7 @@ const App = () => {
   const handleLogin = (data) => {
     setLoggedInStatus("LOGGED_IN");
     setUser(data);
+    console.log("user data", data);
   };
 
   const handleLogout = () => {

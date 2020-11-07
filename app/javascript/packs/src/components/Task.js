@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Card, Form, Button } from "react-bootstrap";
+import React from "react";
+import { Card, Button } from "react-bootstrap";
 import axios from "axios";
 
 const Task = ({
@@ -9,12 +9,11 @@ const Task = ({
   title,
   request_type,
   description,
-  completed,
   created_date,
   handlePopupClose,
+  completed,
   task_fulfilled,
   fulfillmentId,
-  hide_item,
   handleVolunteerClick,
   addFulfillmentData,
   updateFulfillmentData,
@@ -94,6 +93,15 @@ const Task = ({
     }
   };
 
+  const calculateTimeToDisable = () => {
+    const dt1 = new Date(created_date);
+    const dt2 = new Date();
+    console.log("executed calculate time");
+    let diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= 60 * 60;
+    return Math.abs(Math.round(diff)) >= 24;
+  };
+
   const renderButtons = () => {
     if (history.location.pathname === "/pages/my-request") {
       return (
@@ -101,14 +109,14 @@ const Task = ({
           <Button
             variant='danger'
             onClick={handleRequestDelete}
-            disabled={completed || task_fulfilled}
+            disabled={!completed || task_fulfilled}
           >
             Delete
           </Button>
           <Button
             variant='secondary'
             onClick={handleRepublish}
-            disabled={completed || hide_item}
+            disabled={!completed || calculateTimeToDisable()}
           >
             Republish
           </Button>
@@ -142,7 +150,7 @@ const Task = ({
           <Button
             variant='primary'
             onClick={handleVolunteer}
-            disable={shouldDisable}
+            disabled={shouldDisable}
           >
             Volunteer
           </Button>

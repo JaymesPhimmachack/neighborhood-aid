@@ -24,12 +24,12 @@ users = User.create([
 	])
 
 
-# users.each do |user|
-# 	user.photo.attach(
-#     io: File.open(Rails.public_path.join("packs/media/images/#{user.first_name.downcase}.jpg").to_s),
-#     filename: "#{user.first_name.downcase}.jpg"
-# 	)
-# end
+users.each do |user|
+	user.photo.attach(
+    io: File.open(Rails.public_path.join("packs/media/images/#{user.first_name.downcase}.jpg").to_s),
+    filename: "#{user.first_name.downcase}.jpg"
+	)
+end
 
 
 requests = Request.create([

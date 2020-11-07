@@ -43,7 +43,6 @@ const StyledHome = styled.div`
 const Home = ({
   history,
   handleLogin,
-  loggedInStatus,
   handleClose,
   handleShow,
   show,
