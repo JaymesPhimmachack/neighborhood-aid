@@ -70,14 +70,13 @@ const Account = ({
       const { data } = await axios.patch(
         `http://localhost:3000/registrations/${user.id}`,
         {
-          user: {
-            first_name,
-            last_name,
-            email,
-            password,
-            password_confirmation,
-          },
+          first_name,
+          last_name,
+          email,
+          password,
+          password_confirmation,
         },
+
         { withCredentials: true }
       );
 

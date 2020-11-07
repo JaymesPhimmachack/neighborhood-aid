@@ -31,10 +31,8 @@ const Login = ({ handleSuccessfulAuth }) => {
       const { data } = await axios.post(
         "http://localhost:3000/sessions",
         {
-          user: {
-            email,
-            password,
-          },
+          email,
+          password,
         },
         { withCredentials: true }
       );

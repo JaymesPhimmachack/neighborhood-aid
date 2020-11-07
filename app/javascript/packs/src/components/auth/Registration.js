@@ -34,19 +34,20 @@ const SignUp = ({ handleSuccessfulAuth }) => {
         password_confirmation,
       } = userInput;
 
+      const formData = new FormData();
+      formData.append("first_name", first_name);
+      formData.append("last_name", last_name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("password_confirmation", password_confirmation);
+      formData.append("photo", photo, photo.name);
+
       const { data } = await axios.post(
         "http://localhost:3000/registrations",
-        {
-          user: {
-            first_name,
-            last_name,
-            email,
-            password,
-            password_confirmation,
-          },
-        },
+        formData,
         { withCredentials: true }
       );
+
       setUserInput({
         first_name: "",
         last_name: "",
@@ -54,9 +55,9 @@ const SignUp = ({ handleSuccessfulAuth }) => {
         password: "",
         password_confirmation: "",
       });
+      setPhoto("");
 
-      console.log(data);
-      if (data.status === 201) {
+      if (data) {
         handleSuccessfulAuth(data);
       }
     } catch (error) {
@@ -70,8 +71,8 @@ const SignUp = ({ handleSuccessfulAuth }) => {
     setUserInput({ [name]: newValue });
   };
 
-  const onDrop = (picture) => {
-    setPhoto(picture);
+  const fileSelectedHandler = (event) => {
+    setPhoto(event.target.files[0]);
   };
 
   return (
@@ -129,12 +130,11 @@ const SignUp = ({ handleSuccessfulAuth }) => {
           />
         </Form.Group>
         <Form.Group>
-          <ImageUploader
-            withIcon={false}
-            buttonText='Choose images'
-            onChange={onDrop}
-            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-            maxFileSize={5242880}
+          <Form.File
+            label='Upload Avatar (approved formats: .jpg, .png, .pdf)'
+            type='file'
+            name='photo'
+            onChange={fileSelectedHandler}
           />
         </Form.Group>
         <Button variant='primary' type='submit' className='w-100'>
