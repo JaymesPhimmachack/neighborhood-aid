@@ -23,12 +23,14 @@ users = User.create([
 	{first_name: 'Gary', last_name: 'Snow', email: 'gsnow@email.com', password: 'password12', password_confirmation: 'password12'}
 	])
 
-users.each do |user|
-	user.photo.attach(
-    io: File.open(Rails.public_path.join("packs/media/images/#{user.first_name.downcase}.jpg").to_s),
-    filename: "#{user.first_name.downcase}.jpg"
-	)
-end
+
+# users.each do |user|
+# 	user.photo.attach(
+#     io: File.open(Rails.public_path.join("packs/media/images/#{user.first_name.downcase}.jpg").to_s),
+#     filename: "#{user.first_name.downcase}.jpg"
+# 	)
+# end
+
 
 requests = Request.create([
 	{owner_id: 1, title: "Heavy furniture help", request_type: "One-time task", description: "I need help carrying a piece of heavy furniture.", address: "3190 Bicetown Road New York, New York City, NY 10007", latitude: 40.713051, longitude: -74.007233, helper_quantity: 3
