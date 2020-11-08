@@ -125,7 +125,7 @@ const Requests = ({
             key={id}
             position={[latitude, longitude]}
             icon={
-              request_type === "One-time task"
+              request_type === "one-time task"
                 ? oneTimeTaskIcon
                 : materialNeedIcon
             }
