@@ -71,7 +71,7 @@ const Header = ({ handleLogout, handleShow, name, loggedInStatus }) => {
                 name='register'
                 onClick={handleShow}
               >
-                Register
+                Sign Up
               </button>
             </React.Fragment>
           ) : (
