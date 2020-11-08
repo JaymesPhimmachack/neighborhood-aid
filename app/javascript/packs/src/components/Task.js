@@ -61,7 +61,6 @@ const Task = ({
     try {
       const { data } = await axios.patch(
         `https://jp-neighborhood-aid.herokuapp.com/fulfillments/${fulfillmentId}`,
-
         {
           request_id: requestId,
           volunteer_id: user.id,
@@ -79,7 +78,6 @@ const Task = ({
     try {
       const { data } = await axios.post(
         "https://jp-neighborhood-aid.herokuapp.com/fulfillments",
-
         {
           request_id: requestId,
           volunteer_id: user.id,

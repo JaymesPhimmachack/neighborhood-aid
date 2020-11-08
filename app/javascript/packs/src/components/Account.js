@@ -7,6 +7,9 @@ import axios from "axios";
 const StyledAccount = styled.div`
   max-width: 500px;
   margin: 0 auto;
+  .btn-style {
+    width: 100px;
+  }
 `;
 
 const Account = ({
@@ -62,7 +65,6 @@ const Account = ({
     try {
       const { data } = await axios.patch(
         `https://jp-neighborhood-aid.herokuapp.com/registrations/${user.id}`,
-
         {
           first_name,
           last_name,
@@ -157,12 +159,12 @@ const Account = ({
             required
           />
         </Form.Group>
-        <div className='d-flex justify-content-around'>
-          <Button variant='primary' type='submit'>
+        <div className='d-flex justify-content-around mt-4'>
+          <Button variant='primary' type='submit' className='btn-style'>
             Update
           </Button>
-          <Button variant='danger' onClick={handleDelete}>
-            Delete Account
+          <Button variant='danger' onClick={handleDelete} className='btn-style'>
+            Delete
           </Button>
         </div>
       </Form>

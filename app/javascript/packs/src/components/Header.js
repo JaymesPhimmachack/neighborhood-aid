@@ -4,6 +4,7 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { FaHandsHelping } from "react-icons/fa";
 import styled from "styled-components";
 import axios from "axios";
+import Avatar from "./Avatar";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #264653;
@@ -25,15 +26,21 @@ const StyledNavbar = styled(Navbar)`
   #basic-nav-dropdown {
     color: #fff;
   }
+  .dropleft .dropdown-toggle::before {
+    display: none;
+  }
+  .avatar {
+    width: 25px;
+    margin: 0 8px;
+  }
 `;
 
-const Header = ({ handleLogout, handleShow, name, loggedInStatus }) => {
+const Header = ({ handleLogout, handleShow, user, loggedInStatus }) => {
   let history = useHistory();
   const handleLogoutClick = async () => {
     try {
       const { data } = await axios.delete(
         "https://jp-neighborhood-aid.herokuapp.com/logout",
-
         {
           withCredentials: true,
         }
@@ -95,7 +102,16 @@ const Header = ({ handleLogout, handleShow, name, loggedInStatus }) => {
                 Chat
               </Link>
               <NavDropdown
-                title={`Hi ${name}!`}
+                title={
+                  <div className='pull-left'>
+                    <Avatar
+                      className='avatar avatar-sm'
+                      photoUrl={user.photo_url}
+                      headerImageClass='avatar'
+                    />
+                    {`Hi ${user.first_name}!`}
+                  </div>
+                }
                 id='basic-nav-dropdown'
                 className='dropleft text-white'
               >

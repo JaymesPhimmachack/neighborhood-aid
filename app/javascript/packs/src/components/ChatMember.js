@@ -6,8 +6,8 @@ export const ChatMember = ({ members }) => {
     return (
       <Card key={member.id}>
         <Card.Body>
-          <div className='media'>
-            <div className='media-body'>
+          <div>
+            <div>
               <span>
                 {member.first_name} {member.last_name}
               </span>

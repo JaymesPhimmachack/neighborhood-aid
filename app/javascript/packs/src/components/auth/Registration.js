@@ -36,9 +36,10 @@ const SignUp = ({ handleSuccessfulAuth }) => {
       formData.append("password_confirmation", password_confirmation);
       formData.append("photo", photo, photo.name);
 
-      const { data } = await axios.post(
+      const {
+        data,
+      } = await axios.post(
         "https://jp-neighborhood-aid.herokuapp.com/registrations",
-
         formData,
         { withCredentials: true }
       );
@@ -130,6 +131,7 @@ const SignUp = ({ handleSuccessfulAuth }) => {
             type='file'
             name='photo'
             onChange={fileSelectedHandler}
+            required
           />
         </Form.Group>
         <Button variant='primary' type='submit' className='w-100'>

@@ -85,7 +85,6 @@ const AddRequestForm = ({
     try {
       const { data } = await axios.post(
         "https://jp-neighborhood-aid.herokuapp.com/requests",
-
         {
           request: {
             owner_id: userId,
@@ -170,6 +169,7 @@ const AddRequestForm = ({
           <LocationSearchInput
             setUserInput={setUserInput}
             userAddress={userInput.address}
+            markerAddress={markerAddress}
           />
         </Form.Group>
 

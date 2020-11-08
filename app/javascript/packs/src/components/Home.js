@@ -36,8 +36,6 @@ const StyledHome = styled.div`
     color: #f4f1de;
     text-shadow: 5px 5px 8px #737373;
   }
-  p {
-  }
 `;
 
 const Home = ({

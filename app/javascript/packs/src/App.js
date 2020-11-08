@@ -43,7 +43,6 @@ const App = () => {
     try {
       const { data } = await axios.get(
         "https://jp-neighborhood-aid.herokuapp.com/logged_in",
-
         {
           withCredentials: true,
         }
@@ -250,8 +249,8 @@ const App = () => {
         <Header
           handleLogout={handleLogout}
           handleShow={handleShow}
-          name={user.first_name}
           loggedInStatus={loggedInStatus}
+          user={user}
         />
         <Switch>
           <Route

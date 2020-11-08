@@ -30,7 +30,6 @@ const Login = ({ handleSuccessfulAuth }) => {
 
       const { data } = await axios.post(
         "https://jp-neighborhood-aid.herokuapp.com/sessions",
-
         {
           email,
           password,

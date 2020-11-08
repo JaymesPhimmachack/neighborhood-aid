@@ -3,15 +3,10 @@ import { Map, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import Task from "./Task";
 import AddRequestForm from "./AddRequestForm";
-import styled from "styled-components";
 import { Modal, Button } from "react-bootstrap";
 import oneTimeTaskUrl from "../../../../assets/images/one_time_task.svg";
 import materialNeedUrl from "../../../../assets/images/material_need.svg";
 import axios from "axios";
-
-var corner1 = L.latLng(40.712, -74.227),
-  corner2 = L.latLng(40.774, -74.125),
-  bounds = L.latLngBounds(corner1, corner2);
 
 const oneTimeTaskIcon = L.icon({
   iconUrl: oneTimeTaskUrl,
@@ -33,7 +28,6 @@ const Requests = ({
   location,
 }) => {
   const [show, setShow] = useState(false);
-  const [bounds, setBounds] = useState("");
   const [markerLatLng, setMarkerLatLng] = useState({});
   const [markerAddress, setMarkerAddress] = useState();
   const [requestCount, setRequestCount] = useState(0);
@@ -65,20 +59,19 @@ const Requests = ({
   };
 
   const getMarkerLocation = (event) => {
-    // Add feature later
-    // if (event.originalEvent.button === 2) {
-    //   const { lat, lng } = event.latlng;
-    // setMarkerLatLng({ lat, lng });
-    // getAddressByLatLng(lat, lng);
-    // }
+    if (event.originalEvent.button === 2) {
+      const { lat, lng } = event.latlng;
+      console.log("get marker");
+      setMarkerLatLng({ lat, lng });
+      getAddressByLatLng(lat, lng);
+    }
   };
 
   const getAddressByLatLng = async (lat, lng) => {
-    const API_URL =
-      "https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=<%=Rails.application.credentials.google[:google_map_api_key]%>";
+    const API_URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
     try {
       const { data } = await axios.get(API_URL);
-
+      console.log(data.results[0].formatted_address);
       setMarkerAddress(data.results[0].formatted_address);
       handleShowForm();
     } catch (error) {
@@ -132,7 +125,7 @@ const Requests = ({
             key={id}
             position={[latitude, longitude]}
             icon={
-              request_type === "one-time task"
+              request_type === "One-time task"
                 ? oneTimeTaskIcon
                 : materialNeedIcon
             }
@@ -189,7 +182,6 @@ const Requests = ({
             onMouseUp={getMarkerLocation}
             onContextMenu={handleContextMenu}
             onClick={handleClick}
-            maxBounds={bounds}
           >
             <TileLayer
               url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'

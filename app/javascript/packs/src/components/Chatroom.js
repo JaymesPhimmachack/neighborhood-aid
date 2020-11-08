@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Avatar from "./Avatar";
 import { Form, Button } from "react-bootstrap";
 import { IoMdSend } from "react-icons/io";
 import consumer from "../cable";
@@ -9,34 +8,6 @@ import styled from "styled-components";
 import axios from "axios";
 
 const StyleChatRoom = styled.div`
-  .avatar-lg {
-    height: 3.125rem;
-    min-height: 3.125rem;
-    width: 3.125rem;
-    min-width: 3.125rem;
-  }
-
-  .avatar {
-    background: #f5f6fa;
-    display: inline-block;
-    position: relative;
-    line-height: 0;
-  }
-  .avatar-image-lg {
-    border-radius: 50%;
-  }
-  .avatar-sm {
-    height: 2.75rem;
-    min-height: 2.75rem;
-    width: 2.75rem;
-    min-width: 2.75rem;
-  }
-  .avatar-image-sm {
-    height: 2.75rem;
-    min-height: 2.75rem;
-    width: 2.75rem;
-    min-width: 2.75rem;
-  }
   .message-group {
     height: 600px;
     margin-bottom: 30px;
@@ -45,7 +16,15 @@ const StyleChatRoom = styled.div`
   }
 `;
 
-const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
+const ChatRoom = ({
+  id,
+  user,
+  members,
+  setRoomMessages,
+  roomMessages,
+  loggedInStatus,
+  history,
+}) => {
   const [userMessage, setUserMessage] = useState("");
   const [isMounted, setIsMounted] = useState(false);
   const [chatDisconnected, setChatDisconnected] = useState(true);
@@ -59,7 +38,6 @@ const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
     try {
       const { data } = await axios.post(
         "https://jp-neighborhood-aid.herokuapp.com/messages",
-
         {
           creator_id: user.id,
           request_id: id,
@@ -73,6 +51,10 @@ const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
   };
 
   useEffect(() => {
+    if (loggedInStatus === "NOT_LOGGED_IN") {
+      history.push("/");
+    }
+
     setIsMounted(true);
     consumer.subscriptions.create(
       {
@@ -96,7 +78,7 @@ const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
       }
     );
     return () => setIsMounted(false);
-  }, [id]);
+  }, [id, loggedInStatus]);
 
   return (
     <StyleChatRoom className='col-9'>
@@ -132,7 +114,7 @@ const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
           </div>
         </div>
         <div className='col-3'>
-          {isMounted && <ChatMember members={members} />}
+          {isMounted && <ChatMember members={members} user={user} />}
         </div>
       </div>
     </StyleChatRoom>

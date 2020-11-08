@@ -145,6 +145,8 @@ const Chat = ({ user, loggedInStatus, history }) => {
             setRoomMessages={setRoomMessages}
             roomMessages={roomMessages}
             members={members}
+            loggedInStatus={loggedInStatus}
+            history={history}
           />
         )}
       </div>

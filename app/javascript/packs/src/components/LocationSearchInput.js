@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
 
-const LocationSearchInput = ({ setUserInput, userAddress }) => {
+const LocationSearchInput = ({ setUserInput, userAddress, markerAddress }) => {
   const [address, setAddress] = useState(userAddress);
+
+  useEffect(() => {
+    setAddress(markerAddress);
+  }, [markerAddress]);
 
   const handleSelect = (address) => {
     geocodeByAddress(address)
