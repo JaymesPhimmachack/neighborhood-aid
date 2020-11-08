@@ -82,10 +82,10 @@ const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
       {
         connected: () => {
           console.log("connected");
-          //setChatDisconnected(false);
+          setChatDisconnected(false);
         },
         disconnected: () => {
-          //setChatDisconnected(true);
+          setChatDisconnected(true);
           console.log("disconnected");
         },
         received: ({ message }) => {
@@ -120,7 +120,11 @@ const ChatRoom = ({ id, user, members, setRoomMessages, roomMessages }) => {
                   onChange={handleChange}
                 />
 
-                <Button type='submit' className='mb-2'>
+                <Button
+                  type='submit'
+                  className='mb-2'
+                  disabled={chatDisconnected}
+                >
                   <IoMdSend />
                 </Button>
               </Form>
