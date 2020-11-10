@@ -29,7 +29,7 @@ const StyledNavbar = styled(Navbar)`
   .dropleft .dropdown-toggle::before {
     display: none;
   }
-  .avatar {
+  .header-img {
     width: 25px;
     margin: 0 8px;
   }
@@ -103,12 +103,13 @@ const Header = ({ handleLogout, handleShow, user, loggedInStatus }) => {
               </Link>
               <NavDropdown
                 title={
-                  <div className='pull-left'>
-                    <Avatar
-                      className='avatar avatar-sm'
-                      photoUrl={user.photo_url}
-                      headerImageClass='avatar'
-                    />
+                  <div className='pull-left d-flex'>
+                    <div className='header-img'>
+                      <Avatar
+                        className='avatar avatar-sm header-img'
+                        photoUrl={user.photo_url}
+                      />
+                    </div>
                     {`Hi ${user.first_name}!`}
                   </div>
                 }
