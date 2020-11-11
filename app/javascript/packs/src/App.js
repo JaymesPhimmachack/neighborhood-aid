@@ -42,7 +42,7 @@ const App = () => {
   const checkLoginStatus = async () => {
     try {
       const { data } = await axios.get(
-        "http://localhost:3000/logged_in",
+        "https://jp-neighborhood-aid.herokuapp.com/logged_in",
 
         {
           withCredentials: true,
@@ -72,7 +72,7 @@ const App = () => {
   // Request functions
   const getRequestData = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/requests");
+      const { data } = await axios.get("https://jp-neighborhood-aid.herokuapp.com/requests");
       setRequestData(data);
     } catch (error) {
       console.log("request error", error);
@@ -100,7 +100,7 @@ const App = () => {
   // Fulfillment functions
   const getFulfillmentData = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/fulfillments");
+      const { data } = await axios.get("https://jp-neighborhood-aid.herokuapp.com/fulfillments");
 
       setFulfillmentData(data);
     } catch (error) {
