@@ -53,9 +53,12 @@ const Home = ({
   };
 
   useEffect(() => {
-    handleClose()
 
-  })
+    if(loggedInStatus === "NOT_LOGGED_IN") {
+     handleClose()
+    }
+
+  }, [loggedInStatus])
 
   return (
     <StyledHome>
@@ -79,6 +82,8 @@ const Home = ({
 }
         </div>
       </Container>
+      {
+            loggedInStatus === "NOT_LOGGED_IN" ?
       <Modal
         show={show}
         onHide={handleClose}
@@ -97,7 +102,8 @@ const Home = ({
             Close
           </Button>
         </Modal.Footer>
-      </Modal>
+          </Modal> : null
+          }
     </StyledHome>
   );
 };
