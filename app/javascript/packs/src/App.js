@@ -43,6 +43,7 @@ const App = () => {
     try {
       const { data } = await axios.get(
         "https://jp-neighborhood-aid.herokuapp.com/logged_in",
+
         {
           withCredentials: true,
         }
@@ -71,9 +72,7 @@ const App = () => {
   // Request functions
   const getRequestData = async () => {
     try {
-      const { data } = await axios.get(
-        "https://jp-neighborhood-aid.herokuapp.com/requests"
-      );
+      const { data } = await axios.get("https://jp-neighborhood-aid.herokuapp.com/requests");
       setRequestData(data);
     } catch (error) {
       console.log("request error", error);
@@ -101,9 +100,7 @@ const App = () => {
   // Fulfillment functions
   const getFulfillmentData = async () => {
     try {
-      const { data } = await axios.get(
-        "https://jp-neighborhood-aid.herokuapp.com/fulfillments"
-      );
+      const { data } = await axios.get("https://jp-neighborhood-aid.herokuapp.com/fulfillments");
 
       setFulfillmentData(data);
     } catch (error) {
@@ -131,6 +128,7 @@ const App = () => {
     requestCopy.fulfillments = newFulfillments;
     // Update with new request
     setRequestData([...filteredRequest, requestCopy]);
+    // console.log("addFulfillmentData", [...filteredRequest, requestCopy]);
   };
 
   const updateFulfillmentData = (fulfillmentId) => {
@@ -241,6 +239,7 @@ const App = () => {
     getRequestData();
     getFulfillmentData();
     getUserLocation();
+    console.log(user);
   }, []);
 
   return (

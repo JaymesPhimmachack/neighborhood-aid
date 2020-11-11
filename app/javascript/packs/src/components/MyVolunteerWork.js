@@ -43,28 +43,28 @@ const MyVolunteerWork = ({
           created_date,
           fulfillments,
         }) => {
-          return fulfillments.map((fulfillment) => {
-            if (user.id === fulfillment.volunteer_id) {
-              return (
-                <Task
-                  key={id}
-                  user={user}
-                  history={history}
-                  requestId={id}
-                  id={id}
-                  request_type={request_type}
-                  title={title}
-                  description={description}
-                  created_date={created_date}
-                  volunteer_id={fulfillment.volunteer_id}
-                  task_fulfilled={fulfillment.task_fulfilled}
-                  fulfillmentId={fulfillment.id}
-                  updateFulfillmentData={updateFulfillmentData}
-                  deleteFulfillmentData={deleteFulfillmentData}
-                />
-              );
-            }
-          });
+          const filteredFulfillment = fulfillments.filter(
+            (fulfillment) => user.id === fulfillment.volunteer_id
+          );
+ 
+          return (
+            <Task
+              key={id}
+              user={user}
+              history={history}
+              requestId={id}
+              id={id}
+              request_type={request_type}
+              title={title}
+              description={description}
+              created_date={created_date}
+              volunteer_id={filteredFulfillment[0].volunteer_id}
+              task_fulfilled={filteredFulfillment[0].task_fulfilled}
+              fulfillmentId={filteredFulfillment[0].id}
+              updateFulfillmentData={updateFulfillmentData}
+              deleteFulfillmentData={deleteFulfillmentData}
+            />
+          );
         }
       );
     } else {

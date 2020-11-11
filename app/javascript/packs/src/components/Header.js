@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { FaHandsHelping } from "react-icons/fa";
@@ -41,6 +41,7 @@ const Header = ({ handleLogout, handleShow, user, loggedInStatus }) => {
     try {
       const { data } = await axios.delete(
         "https://jp-neighborhood-aid.herokuapp.com/logout",
+
         {
           withCredentials: true,
         }

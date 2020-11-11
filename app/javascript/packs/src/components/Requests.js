@@ -48,9 +48,7 @@ const Requests = ({
 
   const getRequestCount = async () => {
     try {
-      const { data } = await axios.get(
-        "https://jp-neighborhood-aid.herokuapp.com/registrations"
-      );
+      const { data } = await axios.get("https://jp-neighborhood-aid.herokuapp.com/registrations");
 
       setRequestCount(data);
     } catch (error) {
@@ -92,16 +90,11 @@ const Requests = ({
   };
 
   const filteredRequest = () => {
-    return requestData.filter((request) => {
-      if (!request.hide_item) {
-        return request;
-      }
-    });
+    return requestData.filter((request) => !request.hide_item);
   };
 
   const renderRequestMarkers = () => {
     const requests = filteredRequest();
-
     return requests.map(
       ({
         id,

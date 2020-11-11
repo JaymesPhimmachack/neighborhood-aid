@@ -61,6 +61,7 @@ const Task = ({
     try {
       const { data } = await axios.patch(
         `https://jp-neighborhood-aid.herokuapp.com/fulfillments/${fulfillmentId}`,
+
         {
           request_id: requestId,
           volunteer_id: user.id,
@@ -78,6 +79,7 @@ const Task = ({
     try {
       const { data } = await axios.post(
         "https://jp-neighborhood-aid.herokuapp.com/fulfillments",
+
         {
           request_id: requestId,
           volunteer_id: user.id,
@@ -93,13 +95,13 @@ const Task = ({
     }
   };
 
-  const calculateTimeToDisable = () => {
+  const calculateDisabledTime = () => {
     const dt1 = new Date(created_date);
     const dt2 = new Date();
 
     let diff = (dt2.getTime() - dt1.getTime()) / 1000;
     diff /= 60 * 60;
-    return Math.abs(Math.round(diff)) >= 24;
+    return Math.abs(Math.round(diff)) < 24;
   };
 
   const renderButtons = () => {
@@ -109,14 +111,14 @@ const Task = ({
           <Button
             variant='danger'
             onClick={handleRequestDelete}
-            disabled={completed || task_fulfilled || calculateTimeToDisable()}
+            disabled={completed || task_fulfilled}
           >
             Delete
           </Button>
           <Button
             variant='secondary'
             onClick={handleRepublish}
-            disabled={completed || calculateTimeToDisable()}
+            disabled={completed || calculateDisabledTime()}
           >
             Republish
           </Button>
@@ -169,7 +171,7 @@ const Task = ({
         <Card.Title className='mb-3'>{title}</Card.Title>
         <Card.Subtitle className='mb-2 text-muted mb-3'>
           Status:
-          {completed ? "fulfilled" : "unfulfilled"}
+          {completed || task_fulfilled ? "fulfilled" : "unfulfilled"}
         </Card.Subtitle>
         <Card.Text className='mb-4'>{description}</Card.Text>
         {renderButtons()}

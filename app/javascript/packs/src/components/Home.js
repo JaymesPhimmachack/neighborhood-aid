@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Login from "./auth/Login";
-import Registration from "./auth/Registration";
+import SignUp from "./auth/SignUp";
 import { Modal, Container, Button } from "react-bootstrap";
 import mainImage from "../../../../assets/images/team-4529717_1920.jpg";
 import styled from "styled-components";
@@ -39,6 +39,7 @@ const StyledHome = styled.div`
 `;
 
 const Home = ({
+  loggedInStatus,
   history,
   handleLogin,
   handleClose,
@@ -51,12 +52,19 @@ const Home = ({
     history.push("/pages/requests");
   };
 
+  useEffect(() => {
+    handleClose()
+
+  })
+
   return (
     <StyledHome>
       <Container>
         <div className='wrapper'>
           <h1>Neighborhood Aid</h1>
           <h3>Lend a helping hand or ask for help.</h3>
+          {
+            loggedInStatus === "NOT_LOGGED_IN" ?
           <div className='cta'>
             <p>Ready to make a difference or look for help?</p>
             <Button
@@ -67,7 +75,8 @@ const Home = ({
             >
               Sign Up
             </Button>
-          </div>
+          </div> : null
+}
         </div>
       </Container>
       <Modal
@@ -80,7 +89,7 @@ const Home = ({
           {showBtnClick === "signin" ? (
             <Login handleSuccessfulAuth={handleSuccessfulAuth} />
           ) : (
-            <Registration handleSuccessfulAuth={handleSuccessfulAuth} />
+            <SignUp handleSuccessfulAuth={handleSuccessfulAuth} />
           )}
         </Modal.Body>
         <Modal.Footer className='mt-3'>

@@ -65,6 +65,7 @@ const Account = ({
     try {
       const { data } = await axios.patch(
         `https://jp-neighborhood-aid.herokuapp.com/registrations/${user.id}`,
+
         {
           first_name,
           last_name,
@@ -108,7 +109,7 @@ const Account = ({
 
   return (
     <StyledAccount className='mt-5'>
-      <div className='text-center'>
+      <div className='text-center w-25 mx-auto'>
         <Avatar photoUrl={user.photo_url} />
       </div>
       <Form onSubmit={handleSubmit} className='mt-4'>
